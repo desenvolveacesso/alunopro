@@ -878,9 +878,15 @@
                         </button>
                     </div>
                 </div>
-                <div class="total-hours-card">
-                    <h3>Total de Horas Adquiridas</h3>
-                    <div class="hours-value" id="total-extra-hours">0</div>
+                <div class="dashboard-grid">
+                    <div class="total-hours-card">
+                        <h3>Total de Horas Adquiridas</h3>
+                        <div class="hours-value" id="total-extra-hours">0</div>
+                    </div>
+                    <div class="total-hours-card" style="background-color: var(--secondary);">
+                        <h3>Horas Restantes</h3>
+                        <div class="hours-value" id="remaining-hours">0</div>
+                    </div>
                 </div>
                 <div class="item-list" id="extra-hours-list"></div>
             </div>
@@ -910,6 +916,24 @@
                             </select>
                         </div>
                     </form>
+                    <div class="card-header" style="margin-top: 20px;">
+                        <h3 class="card-title">Horas Complementares</h3>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horas complementares necessárias (total)</label>
+                        <input type="number" step="1" min="0" class="form-input" id="required-hours-input" placeholder="Ex: 200">
+                    </div>
+                    <div class="card-header" style="margin-top: 20px;">
+                        <h3 class="card-title">Backup de Dados</h3>
+                    </div>
+                    <div class="actions" style="margin-top: 10px;">
+                        <button class="btn btn-primary" id="export-btn">
+                            <i class="fas fa-download"></i> Exportar Backup
+                        </button>
+                        <button class="btn btn-secondary" id="import-btn">
+                            <i class="fas fa-upload"></i> Importar Backup
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1161,6 +1185,26 @@
         </div>
     </div>
     
+    <div class="modal" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Importar Backup</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Selecione o arquivo de backup (.json) para restaurar seus dados.</p>
+                <div class="form-group">
+                    <label class="form-label">Arquivo de Backup</label>
+                    <input type="file" class="form-input" id="backup-file" accept=".json">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-import">Cancelar</button>
+                <button class="btn btn-primary" id="save-import">Restaurar Dados</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message"></span>
@@ -1173,6 +1217,7 @@
         let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
         let semesters = JSON.parse(localStorage.getItem('semesters')) || [];
         let extraHours = JSON.parse(localStorage.getItem('extraHours')) || [];
+        let requiredHours = localStorage.getItem('requiredHours') || 0;
 
         // Elementos DOM
         const taskModal = document.getElementById('task-modal');
@@ -1181,6 +1226,7 @@
         const semesterModal = document.getElementById('semester-modal');
         const gradeModal = document.getElementById('grade-modal');
         const extraHoursModal = document.getElementById('extra-hours-modal');
+        const importModal = document.getElementById('import-modal');
         const toast = document.getElementById('toast');
         const taskForm = document.getElementById('task-form');
         const classForm = document.getElementById('class-form');
@@ -1221,6 +1267,7 @@
             document.getElementById('cancel-semester').addEventListener('click', closeModals);
             document.getElementById('cancel-grade').addEventListener('click', closeModals);
             document.getElementById('cancel-extra-hours').addEventListener('click', closeModals);
+            document.getElementById('cancel-import').addEventListener('click', closeModals);
 
             // Event listeners para salvar dados
             document.getElementById('save-task').addEventListener('click', saveTask);
@@ -1230,9 +1277,22 @@
             document.getElementById('save-grade').addEventListener('click', saveGrade);
             document.getElementById('save-extra-hours').addEventListener('click', saveExtraHours);
             
+            // Event listeners de backup
+            document.getElementById('export-btn').addEventListener('click', exportData);
+            document.getElementById('import-btn').addEventListener('click', openImportModal);
+            document.getElementById('save-import').addEventListener('click', importData);
+
+            // Event listener para as horas complementares
+            document.getElementById('required-hours-input').addEventListener('change', (e) => {
+                requiredHours = parseInt(e.target.value) || 0;
+                localStorage.setItem('requiredHours', requiredHours);
+                loadExtraHours(); 
+            });
+            document.getElementById('required-hours-input').value = requiredHours;
+            
             // Fechar modal clicando fora dele
             window.addEventListener('click', function(event) {
-                if (event.target === taskModal || event.target === classModal || event.target === subjectModal || event.target === semesterModal || event.target === gradeModal || event.target === extraHoursModal) {
+                if (event.target === taskModal || event.target === classModal || event.target === subjectModal || event.target === semesterModal || event.target === gradeModal || event.target === extraHoursModal || event.target === importModal) {
                     closeModals();
                 }
             });
@@ -1472,6 +1532,10 @@
             
             extraHoursModal.style.display = 'flex';
         }
+        
+        function openImportModal() {
+            importModal.style.display = 'flex';
+        }
 
         function closeModals() {
             taskModal.style.display = 'none';
@@ -1480,12 +1544,14 @@
             semesterModal.style.display = 'none';
             gradeModal.style.display = 'none';
             extraHoursModal.style.display = 'none';
+            importModal.style.display = 'none';
             taskForm.reset();
             classForm.reset();
             subjectForm.reset();
             semesterForm.reset();
             gradeForm.reset();
             extraHoursForm.reset();
+            document.getElementById('backup-file').value = null;
         }
         
         function updateDate() {
@@ -1763,6 +1829,70 @@
             loadExtraHours();
             showToast('Atividade excluída com sucesso!', 'warning');
         }
+        
+        function exportData() {
+            const data = {
+                tasks: tasks,
+                classes: classes,
+                subjects: subjects,
+                semesters: semesters,
+                extraHours: extraHours
+            };
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `lexscholar_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Backup exportado com sucesso!');
+        }
+        
+        function importData() {
+            const fileInput = document.getElementById('backup-file');
+            const file = fileInput.files[0];
+            if (!file) {
+                showToast('Nenhum arquivo selecionado!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (importedData.tasks && importedData.classes && importedData.subjects) {
+                        tasks = importedData.tasks;
+                        classes = importedData.classes;
+                        subjects = importedData.subjects;
+                        semesters = importedData.semesters || [];
+                        extraHours = importedData.extraHours || [];
+                        
+                        localStorage.setItem('tasks', JSON.stringify(tasks));
+                        localStorage.setItem('classes', JSON.stringify(classes));
+                        localStorage.setItem('subjects', JSON.stringify(subjects));
+                        localStorage.setItem('semesters', JSON.stringify(semesters));
+                        localStorage.setItem('extraHours', JSON.stringify(extraHours));
+                        
+                        loadTasks();
+                        loadClasses();
+                        loadSubjects();
+                        loadSemesters();
+                        loadExtraHours();
+                        closeModals();
+                        showToast('Dados restaurados com sucesso!');
+                    } else {
+                        showToast('O arquivo de backup é inválido.', 'error');
+                    }
+                } catch (error) {
+                    showToast('Falha ao ler o arquivo. Certifique-se de que é um JSON válido.', 'error');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+        }
 
         function populateSubjectSelect(selectId) {
             const select = document.getElementById(selectId);
@@ -1940,10 +2070,14 @@
         function loadExtraHours() {
             const hoursList = document.getElementById('extra-hours-list');
             const totalHoursDisplay = document.getElementById('total-extra-hours');
+            const remainingHoursDisplay = document.getElementById('remaining-hours');
             hoursList.innerHTML = '';
             
             const totalHours = extraHours.reduce((sum, item) => sum + item.amount, 0);
             totalHoursDisplay.textContent = totalHours;
+            
+            const remainingHours = Math.max(0, requiredHours - totalHours);
+            remainingHoursDisplay.textContent = remainingHours;
 
             if (extraHours.length === 0) {
                 hoursList.innerHTML = `<div class="empty-state"><i class="fas fa-award"></i><div>Nenhuma atividade cadastrada.</div></div>`;
