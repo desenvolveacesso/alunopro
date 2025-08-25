@@ -39,6 +39,22 @@
             grid-template-columns: 250px 1fr;
             min-height: 100vh;
         }
+        
+        /* Menu Responsivo */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 2000;
+            font-size: 20px;
+        }
+
 
         /* Sidebar */
         .sidebar {
@@ -470,11 +486,20 @@
             }
             
             .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
+                position: fixed;
+                left: -250px;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             }
             
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+
             .main-content {
                 grid-column: 1;
             }
@@ -595,6 +620,9 @@
     </style>
 </head>
 <body>
+    <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
     <div class="container">
         <div class="sidebar">
             <div class="logo">
@@ -1220,7 +1248,9 @@
             // Lógica para alternar painéis
             const menuItems = document.querySelectorAll('.menu-item');
             const panels = document.querySelectorAll('.panel');
-
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
             menuItems.forEach(item => {
                 item.addEventListener('click', function() {
                     menuItems.forEach(i => i.classList.remove('active'));
@@ -1236,6 +1266,10 @@
                     
                     const pageTitle = document.querySelector('.page-title');
                     pageTitle.textContent = this.querySelector('span').textContent;
+
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('active');
+                    }
 
                     // Recarregar listas quando o painel é ativado
                     if (targetId === 'assignments-panel' || targetId === 'exams-panel') {
@@ -1254,6 +1288,10 @@
                         loadExtraHours();
                     }
                 });
+            });
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
             });
             
             // Lógica para editar e excluir itens
