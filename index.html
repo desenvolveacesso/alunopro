@@ -1,0 +1,1994 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexScholar - Gestão Acadêmica para Direito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap">
+    <style>
+        :root {
+            --primary: #1a3a63;
+            --secondary: #8c6d46;
+            --accent: #c41e3a;
+            --light: #f5f5f5;
+            --dark: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            grid-column: 2;
+            padding: 20px;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .date-display {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #12294d;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #735a38;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(26, 58, 99, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        /* Tasks */
+        .task-item, .item-list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+        
+        .item-list-row {
+            flex-wrap: wrap;
+        }
+
+        .item-list-row:last-child {
+            border-bottom: none;
+        }
+        
+        .task-info, .item-info {
+            flex: 1;
+        }
+
+        .task-title, .item-title {
+            font-weight: 500;
+        }
+
+        .task-due, .item-due {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 16px;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+        }
+
+        .action-btn.edit:hover {
+            color: var(--secondary);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--danger);
+        }
+        
+        .action-btn.grade:hover {
+            color: var(--success);
+        }
+
+        .task-priority, .item-priority {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        .priority-high {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+
+        .priority-medium {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .priority-low {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        /* Schedule */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .day-column {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+
+        .day-header {
+            text-align: center;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .class-item {
+            background-color: rgba(26, 58, 99, 0.1);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .class-time {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .class-item .item-actions {
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* New Grade Input */
+        .grade-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .grade-section label {
+            white-space: nowrap;
+        }
+        
+        .grade-section input {
+            width: 100px;
+        }
+        
+        .grade-display {
+            font-weight: bold;
+            color: var(--success);
+            margin-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            
+            .main-content {
+                grid-column: 1;
+            }
+            
+            .schedule-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .form-row, .form-row-2 {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row-2 > div {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        /* Lists */
+        .item-list {
+            padding: 10px;
+            background-color: var(--light);
+            border-radius: 8px;
+        }
+        
+        .total-hours-card {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .total-hours-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .total-hours-card .hours-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-scale-balanced"></i>
+                <h1>LexScholar</h1>
+            </div>
+            
+            <div class="menu-item active" data-target="dashboard-panel">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            
+            <div class="menu-item" data-target="schedule-panel">
+                <i class="fas fa-calendar-days"></i>
+                <span>Agenda</span>
+            </div>
+            
+            <div class="menu-item" data-target="subjects-panel">
+                <i class="fas fa-book"></i>
+                <span>Disciplinas</span>
+            </div>
+            
+            <div class="menu-item" data-target="assignments-panel">
+                <i class="fas fa-file-lines"></i>
+                <span>Trabalhos</span>
+            </div>
+            
+            <div class="menu-item" data-target="exams-panel">
+                <i class="fas fa-pen-to-square"></i>
+                <span>Provas</span>
+            </div>
+            
+            <div class="menu-item" data-target="timetable-panel">
+                <i class="fas fa-clock"></i>
+                <span>Quadro de Horários</span>
+            </div>
+            
+            <div class="menu-item" data-target="semesters-panel">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Semestres</span>
+            </div>
+            
+            <div class="menu-item" data-target="extra-hours-panel">
+                <i class="fas fa-award"></i>
+                <span>Horas Complementares</span>
+            </div>
+            
+            <div class="menu-item" data-target="settings-panel">
+                <i class="fas fa-gear"></i>
+                <span>Configurações</span>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div id="dashboard-panel" class="panel active">
+                <div class="header">
+                    <h2 class="page-title">Dashboard</h2>
+                    <div class="date-display"></div>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-task-btn">
+                            <i class="fas fa-plus"></i> Nova Tarefa
+                        </button>
+                        <button class="btn btn-secondary" id="add-class-btn">
+                            <i class="fas fa-plus"></i> Nova Aula
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Próximas Provas</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-pen-to-square"></i>
+                            </div>
+                        </div>
+                        <div class="task-list" id="exam-list"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Trabalhos Pendentes</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-file-lines"></i>
+                            </div>
+                        </div>
+                        <div class="task-list" id="assignment-list"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Compromissos</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                        </div>
+                        <div class="task-list" id="appointment-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="schedule-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Agenda</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-task-btn-schedule">
+                            <i class="fas fa-plus"></i> Nova Tarefa
+                        </button>
+                        <button class="btn btn-secondary" id="add-class-btn-schedule">
+                            <i class="fas fa-plus"></i> Nova Aula
+                        </button>
+                    </div>
+                </div>
+                <div class="schedule-grid">
+                    <div class="day-column">
+                        <div class="day-header">Segunda</div>
+                        <div class="class-list" data-day="monday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Terça</div>
+                        <div class="class-list" data-day="tuesday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Quarta</div>
+                        <div class="class-list" data-day="wednesday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Quinta</div>
+                        <div class="class-list" data-day="thursday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Sexta</div>
+                        <div class="class-list" data-day="friday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Sábado</div>
+                        <div class="class-list" data-day="saturday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Domingo</div>
+                        <div class="class-list" data-day="sunday"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subjects-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Disciplinas</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-subject-btn">
+                            <i class="fas fa-plus"></i> Nova Disciplina
+                        </button>
+                    </div>
+                </div>
+                <div class="item-list" id="subjects-full-list"></div>
+            </div>
+
+            <div id="assignments-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Trabalhos</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-assignment-btn">
+                            <i class="fas fa-plus"></i> Novo Trabalho
+                        </button>
+                    </div>
+                </div>
+                <div class="item-list" id="assignments-full-list"></div>
+            </div>
+            
+            <div id="exams-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Provas</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-exam-btn">
+                            <i class="fas fa-plus"></i> Nova Prova
+                        </button>
+                    </div>
+                </div>
+                <div class="item-list" id="exams-full-list"></div>
+            </div>
+            
+            <div id="timetable-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Quadro de Horários</h2>
+                    <div class="actions">
+                        <button class="btn btn-secondary" id="add-class-btn-timetable">
+                            <i class="fas fa-plus"></i> Nova Aula
+                        </button>
+                    </div>
+                </div>
+                <div class="schedule-grid" id="timetable-grid">
+                    <div class="day-column">
+                        <div class="day-header">Segunda</div>
+                        <div class="class-list" data-day="monday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Terça</div>
+                        <div class="class-list" data-day="tuesday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Quarta</div>
+                        <div class="class-list" data-day="wednesday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Quinta</div>
+                        <div class="class-list" data-day="thursday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Sexta</div>
+                        <div class="class-list" data-day="friday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Sábado</div>
+                        <div class="class-list" data-day="saturday"></div>
+                    </div>
+                    
+                    <div class="day-column">
+                        <div class="day-header">Domingo</div>
+                        <div class="class-list" data-day="sunday"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="semesters-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Semestres</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-semester-btn">
+                            <i class="fas fa-plus"></i> Novo Semestre
+                        </button>
+                    </div>
+                </div>
+                <div class="item-list" id="semesters-list"></div>
+            </div>
+            
+            <div id="extra-hours-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Horas Complementares</h2>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-extra-hours-btn">
+                            <i class="fas fa-plus"></i> Nova Atividade
+                        </button>
+                    </div>
+                </div>
+                <div class="total-hours-card">
+                    <h3>Total de Horas Adquiridas</h3>
+                    <div class="hours-value" id="total-extra-hours">0</div>
+                </div>
+                <div class="item-list" id="extra-hours-list"></div>
+            </div>
+            
+            <div id="settings-panel" class="panel">
+                <div class="header">
+                    <h2 class="page-title">Configurações</h2>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Opções de Usuário</h3>
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">Tema</label>
+                            <select class="form-select">
+                                <option>Padrão</option>
+                                <option>Escuro</option>
+                                <option>Claro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Idioma</label>
+                            <select class="form-select">
+                                <option>Português (Brasil)</option>
+                                <option>English (US)</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="task-modal-title">Adicionar Nova Tarefa</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <input type="hidden" id="task-id">
+                    <div class="form-group">
+                        <label class="form-label">Título da Tarefa *</label>
+                        <input type="text" class="form-input" id="task-title" placeholder="Ex: Resumo de Direito Civil" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo *</label>
+                        <select class="form-select" id="task-type" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="exam">Prova</option>
+                            <option value="assignment">Trabalho</option>
+                            <option value="appointment">Compromisso</option>
+                            <option value="other">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Disciplina</label>
+                        <select class="form-select" id="task-subject">
+                            <option value="">Selecione a disciplina</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Data *</label>
+                            <input type="date" class="form-input" id="task-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Hora</label>
+                            <input type="time" class="form-input" id="task-time">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Prioridade *</label>
+                        <select class="form-select" id="task-priority" required>
+                            <option value="">Selecione a prioridade</option>
+                            <option value="high">Alta</option>
+                            <option value="medium">Média</option>
+                            <option value="low">Baixa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-textarea" id="task-description" placeholder="Detalhes da tarefa..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-task">Cancelar</button>
+                <button class="btn btn-primary" id="save-task">Salvar Tarefa</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="class-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="class-modal-title">Adicionar Nova Aula</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="class-form">
+                    <input type="hidden" id="class-id">
+                    <div class="form-group">
+                        <label class="form-label">Disciplina *</label>
+                        <select class="form-select" id="class-subject" required>
+                            <option value="">Selecione a disciplina</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Dia da Semana *</label>
+                        <select class="form-select" id="class-day" required>
+                            <option value="">Selecione o dia</option>
+                            <option value="monday">Segunda-feira</option>
+                            <option value="tuesday">Terça-feira</option>
+                            <option value="wednesday">Quarta-feira</option>
+                            <option value="thursday">Quinta-feira</option>
+                            <option value="friday">Sexta-feira</option>
+                            <option value="saturday">Sábado</option>
+                            <option value="sunday">Domingo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Hora de Início *</label>
+                            <input type="time" class="form-input" id="class-start" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Hora de Término *</label>
+                            <input type="time" class="form-input" id="class-end" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Local</label>
+                        <input type="text" class="form-input" id="class-location" placeholder="Ex: Sala 102">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Professor</label>
+                        <input type="text" class="form-input" id="class-professor" placeholder="Nome do professor">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-class">Cancelar</button>
+                <button class="btn btn-primary" id="save-class">Salvar Aula</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="subject-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="subject-modal-title">Adicionar Nova Disciplina</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="subject-form">
+                    <input type="hidden" id="subject-id">
+                    <div class="form-group">
+                        <label class="form-label">Nome da Disciplina *</label>
+                        <input type="text" class="form-input" id="subject-name" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-subject">Cancelar</button>
+                <button class="btn btn-primary" id="save-subject">Salvar Disciplina</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="semester-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="semester-modal-title">Adicionar Novo Semestre</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="semester-form">
+                    <input type="hidden" id="semester-id">
+                    <div class="form-group">
+                        <label class="form-label">Nome do Semestre *</label>
+                        <input type="text" class="form-input" id="semester-name" placeholder="Ex: 2023.2" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Início *</label>
+                            <input type="date" class="form-input" id="semester-start" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fim *</label>
+                            <input type="date" class="form-input" id="semester-end" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-semester">Cancelar</button>
+                <button class="btn btn-primary" id="save-semester">Salvar Semestre</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="grade-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="grade-modal-title">Adicionar Nota</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="grade-form">
+                    <input type="hidden" id="grade-task-id">
+                    <div class="form-group">
+                        <label class="form-label" id="grade-task-label"></label>
+                        <input type="number" step="0.1" min="0" max="10" class="form-input" id="task-grade" placeholder="Digite a nota (0-10)" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-grade">Cancelar</button>
+                <button class="btn btn-primary" id="save-grade">Salvar Nota</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="extra-hours-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="extra-hours-modal-title">Adicionar Horas Complementares</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="extra-hours-form">
+                    <input type="hidden" id="extra-hours-id">
+                    <div class="form-group">
+                        <label class="form-label">Atividade *</label>
+                        <input type="text" class="form-input" id="extra-hours-activity" placeholder="Ex: Palestra sobre Inovações Jurídicas" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo *</label>
+                        <select class="form-select" id="extra-hours-type" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="Palestra">Palestra</option>
+                            <option value="Seminário">Seminário</option>
+                            <option value="Curso Livre">Curso Livre</option>
+                            <option value="Evento">Evento</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Data *</label>
+                            <input type="date" class="form-input" id="extra-hours-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Carga Horária (h) *</label>
+                            <input type="number" step="0.5" min="0" class="form-input" id="extra-hours-amount" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-extra-hours">Cancelar</button>
+                <button class="btn btn-primary" id="save-extra-hours">Salvar Horas</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        // Dados da aplicação
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let classes = JSON.parse(localStorage.getItem('classes')) || [];
+        let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+        let semesters = JSON.parse(localStorage.getItem('semesters')) || [];
+        let extraHours = JSON.parse(localStorage.getItem('extraHours')) || [];
+
+        // Elementos DOM
+        const taskModal = document.getElementById('task-modal');
+        const classModal = document.getElementById('class-modal');
+        const subjectModal = document.getElementById('subject-modal');
+        const semesterModal = document.getElementById('semester-modal');
+        const gradeModal = document.getElementById('grade-modal');
+        const extraHoursModal = document.getElementById('extra-hours-modal');
+        const toast = document.getElementById('toast');
+        const taskForm = document.getElementById('task-form');
+        const classForm = document.getElementById('class-form');
+        const subjectForm = document.getElementById('subject-form');
+        const semesterForm = document.getElementById('semester-form');
+        const gradeForm = document.getElementById('grade-form');
+        const extraHoursForm = document.getElementById('extra-hours-form');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            updateDate();
+            loadTasks();
+            loadClasses();
+            loadSubjects();
+            loadSemesters();
+            loadExtraHours();
+        });
+        
+        function initApp() {
+            // Event listeners para abrir modais
+            document.getElementById('add-task-btn').addEventListener('click', () => openTaskModal('add'));
+            document.getElementById('add-class-btn').addEventListener('click', () => openClassModal('add'));
+            document.getElementById('add-assignment-btn').addEventListener('click', () => openTaskModal('add', 'assignment'));
+            document.getElementById('add-exam-btn').addEventListener('click', () => openTaskModal('add', 'exam'));
+            document.getElementById('add-task-btn-schedule').addEventListener('click', () => openTaskModal('add'));
+            document.getElementById('add-class-btn-schedule').addEventListener('click', () => openClassModal('add'));
+            document.getElementById('add-class-btn-timetable').addEventListener('click', () => openClassModal('add'));
+            document.getElementById('add-subject-btn').addEventListener('click', () => openSubjectModal('add'));
+            document.getElementById('add-semester-btn').addEventListener('click', () => openSemesterModal('add'));
+            document.getElementById('add-extra-hours-btn').addEventListener('click', () => openExtraHoursModal('add'));
+            
+            // Event listeners para fechar modais
+            document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', closeModals));
+            document.getElementById('cancel-task').addEventListener('click', closeModals);
+            document.getElementById('cancel-class').addEventListener('click', closeModals);
+            document.getElementById('cancel-subject').addEventListener('click', closeModals);
+            document.getElementById('cancel-semester').addEventListener('click', closeModals);
+            document.getElementById('cancel-grade').addEventListener('click', closeModals);
+            document.getElementById('cancel-extra-hours').addEventListener('click', closeModals);
+
+            // Event listeners para salvar dados
+            document.getElementById('save-task').addEventListener('click', saveTask);
+            document.getElementById('save-class').addEventListener('click', saveClass);
+            document.getElementById('save-subject').addEventListener('click', saveSubject);
+            document.getElementById('save-semester').addEventListener('click', saveSemester);
+            document.getElementById('save-grade').addEventListener('click', saveGrade);
+            document.getElementById('save-extra-hours').addEventListener('click', saveExtraHours);
+            
+            // Fechar modal clicando fora dele
+            window.addEventListener('click', function(event) {
+                if (event.target === taskModal || event.target === classModal || event.target === subjectModal || event.target === semesterModal || event.target === gradeModal || event.target === extraHoursModal) {
+                    closeModals();
+                }
+            });
+            
+            // Funcionalidade para marcar tarefas como concluídas
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('task-check')) {
+                    const taskId = e.target.closest('.task-item').dataset.id;
+                    toggleTaskCompleted(taskId);
+                }
+            });
+
+            // Lógica para alternar painéis
+            const menuItems = document.querySelectorAll('.menu-item');
+            const panels = document.querySelectorAll('.panel');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    const targetId = this.getAttribute('data-target');
+                    const targetPanel = document.getElementById(targetId);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                    
+                    const pageTitle = document.querySelector('.page-title');
+                    pageTitle.textContent = this.querySelector('span').textContent;
+
+                    // Recarregar listas quando o painel é ativado
+                    if (targetId === 'assignments-panel' || targetId === 'exams-panel') {
+                        loadTasks();
+                    }
+                    if (targetId === 'timetable-panel') {
+                        loadClasses();
+                    }
+                    if (targetId === 'subjects-panel') {
+                        loadSubjects();
+                    }
+                    if (targetId === 'semesters-panel') {
+                        loadSemesters();
+                    }
+                    if (targetId === 'extra-hours-panel') {
+                        loadExtraHours();
+                    }
+                });
+            });
+            
+            // Lógica para editar e excluir itens
+            document.getElementById('assignments-full-list').addEventListener('click', handleItemActions);
+            document.getElementById('exams-full-list').addEventListener('click', handleItemActions);
+            document.getElementById('timetable-grid').addEventListener('click', handleClassActions);
+            document.getElementById('subjects-full-list').addEventListener('click', handleSubjectActions);
+            document.getElementById('semesters-list').addEventListener('click', handleSemesterActions);
+            document.getElementById('extra-hours-list').addEventListener('click', handleExtraHoursActions);
+        }
+
+        function handleItemActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+
+            const itemId = parseInt(btn.dataset.id);
+            const taskToEdit = tasks.find(t => t.id === itemId);
+
+            if (btn.classList.contains('edit')) {
+                openTaskModal('edit', taskToEdit.type, taskToEdit);
+            } else if (btn.classList.contains('delete')) {
+                if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                    deleteTask(itemId);
+                }
+            } else if (btn.classList.contains('grade')) {
+                openGradeModal(taskToEdit);
+            }
+        }
+        
+        function handleClassActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+        
+            const classId = parseInt(btn.dataset.id);
+        
+            if (btn.classList.contains('edit')) {
+                const classToEdit = classes.find(c => c.id === classId);
+                openClassModal('edit', classToEdit);
+            } else if (btn.classList.contains('delete')) {
+                if (confirm('Tem certeza que deseja excluir esta aula?')) {
+                    deleteClass(classId);
+                }
+            }
+        }
+
+        function handleSubjectActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+
+            const subjectId = parseInt(btn.dataset.id);
+
+            if (btn.classList.contains('edit')) {
+                const subjectToEdit = subjects.find(s => s.id === subjectId);
+                openSubjectModal('edit', subjectToEdit);
+            } else if (btn.classList.contains('delete')) {
+                if (confirm('Tem certeza que deseja excluir esta disciplina?')) {
+                    deleteSubject(subjectId);
+                }
+            }
+        }
+        
+        function handleSemesterActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+
+            const semesterId = parseInt(btn.dataset.id);
+
+            if (btn.classList.contains('edit')) {
+                const semesterToEdit = semesters.find(s => s.id === semesterId);
+                openSemesterModal('edit', semesterToEdit);
+            } else if (btn.classList.contains('delete')) {
+                if (confirm('Tem certeza que deseja excluir este semestre?')) {
+                    deleteSemester(semesterId);
+                }
+            }
+        }
+        
+        function handleExtraHoursActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+
+            const hoursId = parseInt(btn.dataset.id);
+
+            if (btn.classList.contains('edit')) {
+                const hoursToEdit = extraHours.find(h => h.id === hoursId);
+                openExtraHoursModal('edit', hoursToEdit);
+            } else if (btn.classList.contains('delete')) {
+                if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+                    deleteExtraHours(hoursId);
+                }
+            }
+        }
+        
+        function openTaskModal(mode, type = null, taskData = null) {
+            document.getElementById('task-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Tarefa' : 'Editar Tarefa';
+            document.getElementById('task-id').value = taskData ? taskData.id : '';
+            taskForm.reset();
+            
+            if (taskData) {
+                document.getElementById('task-title').value = taskData.title;
+                document.getElementById('task-type').value = taskData.type;
+                document.getElementById('task-subject').value = taskData.subject;
+                document.getElementById('task-date').value = taskData.date;
+                document.getElementById('task-time').value = taskData.time;
+                document.getElementById('task-priority').value = taskData.priority;
+                document.getElementById('task-description').value = taskData.description;
+            }
+            
+            if (type) {
+                document.getElementById('task-type').value = type;
+            }
+            
+            populateSubjectSelect('task-subject');
+            taskModal.style.display = 'flex';
+        }
+        
+        function openClassModal(mode, classData = null) {
+            document.getElementById('class-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Aula' : 'Editar Aula';
+            document.getElementById('class-id').value = classData ? classData.id : '';
+            classForm.reset();
+
+            if (classData) {
+                document.getElementById('class-subject').value = classData.subject;
+                document.getElementById('class-day').value = classData.day;
+                document.getElementById('class-start').value = classData.start;
+                document.getElementById('class-end').value = classData.end;
+                document.getElementById('class-location').value = classData.location;
+                document.getElementById('class-professor').value = classData.professor;
+            }
+
+            populateSubjectSelect('class-subject');
+            classModal.style.display = 'flex';
+        }
+
+        function openSubjectModal(mode, subjectData = null) {
+            document.getElementById('subject-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Disciplina' : 'Editar Disciplina';
+            document.getElementById('subject-id').value = subjectData ? subjectData.id : '';
+            subjectForm.reset();
+
+            if (subjectData) {
+                document.getElementById('subject-name').value = subjectData.name;
+            }
+            subjectModal.style.display = 'flex';
+        }
+        
+        function openSemesterModal(mode, semesterData = null) {
+            document.getElementById('semester-modal-title').textContent = mode === 'add' ? 'Adicionar Novo Semestre' : 'Editar Semestre';
+            document.getElementById('semester-id').value = semesterData ? semesterData.id : '';
+            semesterForm.reset();
+
+            if (semesterData) {
+                document.getElementById('semester-name').value = semesterData.name;
+                document.getElementById('semester-start').value = semesterData.start;
+                document.getElementById('semester-end').value = semesterData.end;
+            }
+            semesterModal.style.display = 'flex';
+        }
+        
+        function openGradeModal(taskData) {
+            document.getElementById('grade-modal-title').textContent = `Nota de ${taskData.type === 'exam' ? 'Prova' : 'Trabalho'}`;
+            document.getElementById('grade-task-id').value = taskData.id;
+            document.getElementById('grade-task-label').textContent = `${taskData.title} (${taskData.subject || 'Sem disciplina'})`;
+            document.getElementById('task-grade').value = taskData.grade || '';
+            gradeModal.style.display = 'flex';
+        }
+        
+        function openExtraHoursModal(mode, hoursData = null) {
+            document.getElementById('extra-hours-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Atividade' : 'Editar Atividade';
+            document.getElementById('extra-hours-id').value = hoursData ? hoursData.id : '';
+            extraHoursForm.reset();
+            
+            if (hoursData) {
+                document.getElementById('extra-hours-activity').value = hoursData.activity;
+                document.getElementById('extra-hours-type').value = hoursData.type;
+                document.getElementById('extra-hours-date').value = hoursData.date;
+                document.getElementById('extra-hours-amount').value = hoursData.amount;
+            }
+            
+            extraHoursModal.style.display = 'flex';
+        }
+
+        function closeModals() {
+            taskModal.style.display = 'none';
+            classModal.style.display = 'none';
+            subjectModal.style.display = 'none';
+            semesterModal.style.display = 'none';
+            gradeModal.style.display = 'none';
+            extraHoursModal.style.display = 'none';
+            taskForm.reset();
+            classForm.reset();
+            subjectForm.reset();
+            semesterForm.reset();
+            gradeForm.reset();
+            extraHoursForm.reset();
+        }
+        
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            document.querySelector('.date-display').textContent = today.toLocaleDateString('pt-BR', options);
+            
+            const todayISO = today.toISOString().split('T')[0];
+            document.getElementById('task-date').min = todayISO;
+        }
+        
+        function showToast(message, type = 'success') {
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = toast.querySelector('i');
+            
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+                toastIcon.className = 'fas fa-exclamation-triangle';
+            } else {
+                toastIcon.classList.remove('fas', 'fa-exclamation-circle', 'fa-exclamation-triangle');
+                toastIcon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        function saveTask() {
+            const id = document.getElementById('task-id').value;
+            const title = document.getElementById('task-title').value;
+            const type = document.getElementById('task-type').value;
+            const subject = document.getElementById('task-subject').value;
+            const date = document.getElementById('task-date').value;
+            const time = document.getElementById('task-time').value;
+            const priority = document.getElementById('task-priority').value;
+            const description = document.getElementById('task-description').value;
+            
+            if (!title || !type || !date || !priority) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+            
+            if (id) {
+                // Modo de Edição
+                const taskIndex = tasks.findIndex(t => t.id === parseInt(id));
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = {
+                        id: parseInt(id),
+                        title, type, subject, date, time, priority, description,
+                        completed: tasks[taskIndex].completed,
+                        grade: tasks[taskIndex].grade
+                    };
+                    showToast('Tarefa atualizada com sucesso!');
+                }
+            } else {
+                // Modo de Adição
+                const newTask = {
+                    id: Date.now(),
+                    title, type, subject, date, time, priority, description,
+                    completed: false,
+                    grade: null
+                };
+                tasks.push(newTask);
+                showToast('Tarefa adicionada com sucesso!');
+            }
+            
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            loadTasks();
+            closeModals();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            loadTasks();
+            showToast('Tarefa excluída com sucesso!', 'warning');
+        }
+
+        function toggleTaskCompleted(id) {
+            const task = tasks.find(t => t.id === parseInt(id));
+            if (task) {
+                task.completed = !task.completed;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadTasks();
+                showToast(`Tarefa ${task.completed ? 'concluída' : 'reaberta'}!`);
+            }
+        }
+        
+        function saveClass() {
+            const id = document.getElementById('class-id').value;
+            const subject = document.getElementById('class-subject').value;
+            const day = document.getElementById('class-day').value;
+            const start = document.getElementById('class-start').value;
+            const end = document.getElementById('class-end').value;
+            const location = document.getElementById('class-location').value;
+            const professor = document.getElementById('class-professor').value;
+            
+            if (!subject || !day || !start || !end) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+            
+            if (id) {
+                // Modo de Edição
+                const classIndex = classes.findIndex(c => c.id === parseInt(id));
+                if (classIndex !== -1) {
+                    classes[classIndex] = {
+                        id: parseInt(id),
+                        subject, day, start, end, location, professor
+                    };
+                    showToast('Aula atualizada com sucesso!');
+                }
+            } else {
+                // Modo de Adição
+                const newClass = {
+                    id: Date.now(),
+                    subject, day, start, end, location, professor
+                };
+                classes.push(newClass);
+                showToast('Aula adicionada com sucesso!');
+            }
+            
+            localStorage.setItem('classes', JSON.stringify(classes));
+            loadClasses();
+            closeModals();
+        }
+
+        function deleteClass(id) {
+            classes = classes.filter(c => c.id !== id);
+            localStorage.setItem('classes', JSON.stringify(classes));
+            loadClasses();
+            showToast('Aula excluída com sucesso!', 'warning');
+        }
+
+        function saveSubject() {
+            const id = document.getElementById('subject-id').value;
+            const name = document.getElementById('subject-name').value.trim();
+
+            if (!name) {
+                showToast('O nome da disciplina é obrigatório!', 'error');
+                return;
+            }
+
+            if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== parseInt(id))) {
+                showToast('Disciplina já existe!', 'error');
+                return;
+            }
+
+            if (id) {
+                const subjectIndex = subjects.findIndex(s => s.id === parseInt(id));
+                if (subjectIndex !== -1) {
+                    subjects[subjectIndex].name = name;
+                    showToast('Disciplina atualizada com sucesso!');
+                }
+            } else {
+                const newSubject = { id: Date.now(), name };
+                subjects.push(newSubject);
+                showToast('Disciplina adicionada com sucesso!');
+            }
+
+            localStorage.setItem('subjects', JSON.stringify(subjects));
+            loadSubjects();
+            closeModals();
+        }
+
+        function deleteSubject(id) {
+            const subjectName = subjects.find(s => s.id === id)?.name;
+            const tasksUsingSubject = tasks.some(t => t.subject === subjectName);
+            const classesUsingSubject = classes.some(c => c.subject === subjectName);
+
+            if (tasksUsingSubject || classesUsingSubject) {
+                showToast('Não é possível excluir a disciplina. Ela está vinculada a tarefas ou aulas.', 'error');
+                return;
+            }
+            
+            subjects = subjects.filter(s => s.id !== id);
+            localStorage.setItem('subjects', JSON.stringify(subjects));
+            loadSubjects();
+            showToast('Disciplina excluída com sucesso!', 'warning');
+        }
+
+        function saveSemester() {
+            const id = document.getElementById('semester-id').value;
+            const name = document.getElementById('semester-name').value.trim();
+            const start = document.getElementById('semester-start').value;
+            const end = document.getElementById('semester-end').value;
+
+            if (!name || !start || !end) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+
+            if (id) {
+                const semesterIndex = semesters.findIndex(s => s.id === parseInt(id));
+                if (semesterIndex !== -1) {
+                    semesters[semesterIndex] = { id: parseInt(id), name, start, end };
+                    showToast('Semestre atualizado com sucesso!');
+                }
+            } else {
+                const newSemester = { id: Date.now(), name, start, end };
+                semesters.push(newSemester);
+                showToast('Semestre adicionado com sucesso!');
+            }
+
+            localStorage.setItem('semesters', JSON.stringify(semesters));
+            loadSemesters();
+            closeModals();
+        }
+
+        function deleteSemester(id) {
+            semesters = semesters.filter(s => s.id !== id);
+            localStorage.setItem('semesters', JSON.stringify(semesters));
+            loadSemesters();
+            showToast('Semestre excluído com sucesso!', 'warning');
+        }
+        
+        function saveGrade() {
+            const taskId = parseInt(document.getElementById('grade-task-id').value);
+            const grade = parseFloat(document.getElementById('task-grade').value);
+            
+            const task = tasks.find(t => t.id === taskId);
+            
+            if (task) {
+                task.grade = grade;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadTasks();
+                showToast('Nota salva com sucesso!');
+                closeModals();
+            } else {
+                showToast('Tarefa não encontrada!', 'error');
+            }
+        }
+        
+        function saveExtraHours() {
+            const id = document.getElementById('extra-hours-id').value;
+            const activity = document.getElementById('extra-hours-activity').value.trim();
+            const type = document.getElementById('extra-hours-type').value;
+            const date = document.getElementById('extra-hours-date').value;
+            const amount = parseFloat(document.getElementById('extra-hours-amount').value);
+            
+            if (!activity || !type || !date || isNaN(amount) || amount <= 0) {
+                showToast('Preencha todos os campos corretamente!', 'error');
+                return;
+            }
+            
+            if (id) {
+                const hoursIndex = extraHours.findIndex(h => h.id === parseInt(id));
+                if (hoursIndex !== -1) {
+                    extraHours[hoursIndex] = { id: parseInt(id), activity, type, date, amount };
+                    showToast('Atividade atualizada com sucesso!');
+                }
+            } else {
+                const newEntry = { id: Date.now(), activity, type, date, amount };
+                extraHours.push(newEntry);
+                showToast('Atividade adicionada com sucesso!');
+            }
+            
+            localStorage.setItem('extraHours', JSON.stringify(extraHours));
+            loadExtraHours();
+            closeModals();
+        }
+        
+        function deleteExtraHours(id) {
+            extraHours = extraHours.filter(h => h.id !== id);
+            localStorage.setItem('extraHours', JSON.stringify(extraHours));
+            loadExtraHours();
+            showToast('Atividade excluída com sucesso!', 'warning');
+        }
+
+        function populateSubjectSelect(selectId) {
+            const select = document.getElementById(selectId);
+            const selectedValue = select.value;
+            select.innerHTML = '<option value="">Selecione a disciplina</option>';
+            
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.name;
+                option.textContent = subject.name;
+                select.appendChild(option);
+            });
+            select.value = selectedValue;
+        }
+        
+        function loadTasks() {
+            const examList = document.getElementById('exam-list');
+            const assignmentList = document.getElementById('assignment-list');
+            const appointmentList = document.getElementById('appointment-list');
+            const examsFullList = document.getElementById('exams-full-list');
+            const assignmentsFullList = document.getElementById('assignments-full-list');
+            
+            // Limpar listas
+            examList.innerHTML = '';
+            assignmentList.innerHTML = '';
+            appointmentList.innerHTML = '';
+            examsFullList.innerHTML = '';
+            assignmentsFullList.innerHTML = '';
+
+            // Filtrar e renderizar tarefas no Dashboard
+            const exams = tasks.filter(task => task.type === 'exam' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
+            const assignments = tasks.filter(task => task.type === 'assignment' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
+            const appointments = tasks.filter(task => task.type === 'appointment' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            renderTasksToDashboard(exams, examList);
+            renderTasksToDashboard(assignments, assignmentList);
+            renderTasksToDashboard(appointments, appointmentList);
+            
+            // Renderizar listas completas nos painéis de Trabalho e Provas
+            renderFullList(tasks.filter(t => t.type === 'exam'), examsFullList, 'Provas');
+            renderFullList(tasks.filter(t => t.type === 'assignment'), assignmentsFullList, 'Trabalhos');
+        }
+
+        function renderTasksToDashboard(taskList, parentElement) {
+            if (taskList.length === 0) {
+                const type = parentElement.id.replace('-list', '');
+                const icon = type === 'exam' ? 'fas fa-pen-to-square' : (type === 'assignment' ? 'fas fa-file-lines' : 'fas fa-calendar-check');
+                const message = type === 'exam' ? 'Nenhuma prova agendada' : (type === 'assignment' ? 'Nenhum trabalho pendente' : 'Nenhum compromisso');
+                parentElement.innerHTML = `<div class="empty-state"><i class="${icon}"></i><div>${message}</div></div>`;
+            } else {
+                const limitedList = taskList.slice(0, 3);
+                limitedList.forEach(task => {
+                    parentElement.appendChild(createTaskElement(task));
+                });
+            }
+        }
+        
+        function renderFullList(itemList, parentElement, typeTitle) {
+            if (itemList.length === 0) {
+                const icon = typeTitle === 'Provas' ? 'fas fa-pen-to-square' : (typeTitle === 'Trabalhos' ? 'fas fa-file-lines' : 'fas fa-award');
+                parentElement.innerHTML = `<div class="empty-state"><i class="${icon}"></i><div>Nenhuma ${typeTitle.toLowerCase()} cadastrada.</div></div>`;
+            } else {
+                itemList.forEach(item => {
+                    parentElement.appendChild(createFullItemElement(item));
+                });
+            }
+        }
+        
+        function createTaskElement(task) {
+            const taskItem = document.createElement('div');
+            taskItem.className = 'task-item';
+            taskItem.dataset.id = task.id;
+            
+            const priorityClass = `priority-${task.priority}`;
+            
+            taskItem.innerHTML = `
+                <input type="checkbox" class="task-check" ${task.completed ? 'checked' : ''}>
+                <div class="task-info">
+                    <div class="task-title">${task.title}${task.subject ? ` - ${task.subject}` : ''}</div>
+                    <div class="task-due">${formatDate(task.date)}${task.time ? ` - ${task.time}` : ''}</div>
+                </div>
+                ${task.priority ? `<span class="task-priority ${priorityClass}">${getPriorityText(task.priority)}</span>` : ''}
+            `;
+
+            if (task.completed) {
+                taskItem.style.opacity = "0.5";
+                taskItem.style.textDecoration = "line-through";
+            }
+            
+            return taskItem;
+        }
+
+        function createFullItemElement(item) {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-list-row';
+            itemRow.dataset.id = item.id;
+
+            const isTask = item.hasOwnProperty('title');
+            const isExtraHour = item.hasOwnProperty('activity');
+            const priorityClass = isTask ? `priority-${item.priority}` : '';
+            
+            let itemContent = '';
+            if (isTask) {
+                itemContent = `
+                    <div class="item-info">
+                        <div class="item-title">${item.title} - ${item.subject}</div>
+                        <div class="item-due">Entrega: ${formatDate(item.date)} ${item.time ? `- ${item.time}` : ''}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        ${item.priority ? `<span class="item-priority ${priorityClass}">${getPriorityText(item.priority)}</span>` : ''}
+                        ${item.grade !== null ? `<span class="grade-display">Nota: ${item.grade}</span>` : ''}
+                    </div>
+                `;
+                if ((item.type === 'exam' || item.type === 'assignment') && item.completed) {
+                    itemContent += `<button class="action-btn grade" data-id="${item.id}" title="Adicionar/Editar Nota"><i class="fas fa-marker"></i></button>`;
+                }
+
+            } else if (isExtraHour) {
+                itemContent = `
+                    <div class="item-info">
+                        <div class="item-title">${item.activity} - ${item.type}</div>
+                        <div class="item-due">Data: ${formatDate(item.date)} - ${item.amount}h</div>
+                    </div>
+                `;
+            } else {
+                // For subjects and semesters
+                itemContent = `
+                    <div class="item-info">
+                        <div class="item-title">${item.name}</div>
+                        ${item.start ? `<div class="item-due">${formatDate(item.start)} - ${formatDate(item.end)}</div>` : ''}
+                    </div>
+                `;
+            }
+
+            const actionButtons = `
+                <div class="item-actions">
+                    <button class="action-btn edit" data-id="${item.id}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" data-id="${item.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `;
+            
+            itemRow.innerHTML = itemContent + actionButtons;
+
+            return itemRow;
+        }
+
+        function loadSubjects() {
+            const subjectList = document.getElementById('subjects-full-list');
+            subjectList.innerHTML = '';
+            populateSubjectSelect('task-subject');
+            populateSubjectSelect('class-subject');
+
+            if (subjects.length === 0) {
+                subjectList.innerHTML = `<div class="empty-state"><i class="fas fa-book"></i><div>Nenhuma disciplina cadastrada.</div></div>`;
+            } else {
+                subjects.forEach(subject => {
+                    subjectList.appendChild(createFullItemElement(subject));
+                });
+            }
+        }
+
+        function loadSemesters() {
+            const semesterList = document.getElementById('semesters-list');
+            semesterList.innerHTML = '';
+
+            if (semesters.length === 0) {
+                semesterList.innerHTML = `<div class="empty-state"><i class="fas fa-graduation-cap"></i><div>Nenhum semestre cadastrado.</div></div>`;
+            } else {
+                semesters.forEach(semester => {
+                    semesterList.appendChild(createFullItemElement(semester));
+                });
+            }
+        }
+        
+        function loadExtraHours() {
+            const hoursList = document.getElementById('extra-hours-list');
+            const totalHoursDisplay = document.getElementById('total-extra-hours');
+            hoursList.innerHTML = '';
+            
+            const totalHours = extraHours.reduce((sum, item) => sum + item.amount, 0);
+            totalHoursDisplay.textContent = totalHours;
+
+            if (extraHours.length === 0) {
+                hoursList.innerHTML = `<div class="empty-state"><i class="fas fa-award"></i><div>Nenhuma atividade cadastrada.</div></div>`;
+            } else {
+                extraHours.forEach(hour => {
+                    hoursList.appendChild(createFullItemElement(hour));
+                });
+            }
+        }
+
+        function loadClasses() {
+            document.querySelectorAll('.class-list').forEach(list => {
+                list.innerHTML = '';
+            });
+            
+            if (classes.length === 0) {
+                document.querySelectorAll('.class-list').forEach(list => {
+                    list.innerHTML = `<div class="empty-state"><i class="fas fa-clock"></i><div>Nenhuma aula</div></div>`;
+                });
+                return;
+            }
+            
+            const classesByDay = {
+                monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []
+            };
+            
+            classes.forEach(classItem => {
+                if (classesByDay[classItem.day]) {
+                    classesByDay[classItem.day].push(classItem);
+                }
+            });
+            
+            for (const day in classesByDay) {
+                const classList = document.querySelector(`.class-list[data-day="${day}"]`);
+                
+                if (classesByDay[day].length === 0) {
+                    if (day === 'sunday') {
+                        classList.innerHTML = '<div class="empty-state"><i class="fas fa-coffee"></i><div>Sem aulas</div></div>';
+                    } else {
+                        classList.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><div>Nenhuma aula</div></div>';
+                    }
+                    continue;
+                }
+                
+                classesByDay[day].sort((a, b) => a.start.localeCompare(b.start));
+                
+                classesByDay[day].forEach(classItem => {
+                    const classElement = document.createElement('div');
+                    classElement.className = 'class-item';
+                    
+                    classElement.innerHTML = `
+                        <div class="class-time">${formatTime(classItem.start)} - ${formatTime(classItem.end)}</div>
+                        <div>${classItem.subject}</div>
+                        ${classItem.location ? `<div>${classItem.location}</div>` : ''}
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${classItem.id}" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete" data-id="${classItem.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                    
+                    classList.appendChild(classElement);
+                });
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+        
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
+        }
+        
+        function getPriorityText(priority) {
+            switch(priority) {
+                case 'high': return 'Alta';
+                case 'medium': return 'Média';
+                case 'low': return 'Baixa';
+                default: return priority;
+            }
+        }
+    </script>
+</body>
+</html>
