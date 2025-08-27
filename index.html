@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap">
     <style>
+        /* Estilos anteriores mantidos */
         :root {
             --primary: #1a3a63;
             --secondary: #8c6d46;
@@ -54,7 +55,6 @@
             z-index: 2000;
             font-size: 20px;
         }
-
 
         /* Sidebar */
         .sidebar {
@@ -617,6 +617,13 @@
             font-weight: 700;
         }
 
+        /* Novos estilos para a grade curricular */
+        .curriculum-info {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -1079,6 +1086,37 @@
                         <label class="form-label">Nome da Disciplina *</label>
                         <input type="text" class="form-input" id="subject-name" required>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Dia da Semana *</label>
+                        <select class="form-select" id="subject-day" required>
+                            <option value="">Selecione o dia</option>
+                            <option value="monday">Segunda-feira</option>
+                            <option value="tuesday">Terça-feira</option>
+                            <option value="wednesday">Quarta-feira</option>
+                            <option value="thursday">Quinta-feira</option>
+                            <option value="friday">Sexta-feira</option>
+                            <option value="saturday">Sábado</option>
+                            <option value="sunday">Domingo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Hora de Início *</label>
+                            <input type="time" class="form-input" id="subject-start" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Hora de Término *</label>
+                            <input type="time" class="form-input" id="subject-end" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Grade Curricular</label>
+                        <textarea class="form-textarea" id="subject-curriculum" placeholder="Conteúdo programático da disciplina..."></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1119,51 +1157,29 @@
             </div>
         </div>
     </div>
-    
-    <div class="modal" id="grade-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="grade-modal-title">Adicionar Nota</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="grade-form">
-                    <input type="hidden" id="grade-task-id">
-                    <div class="form-group">
-                        <label class="form-label" id="grade-task-label"></label>
-                        <input type="number" step="0.1" min="0" max="10" class="form-input" id="task-grade" placeholder="Digite a nota (0-10)" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="cancel-grade">Cancelar</button>
-                <button class="btn btn-primary" id="save-grade">Salvar Nota</button>
-            </div>
-        </div>
-    </div>
-    
+
     <div class="modal" id="extra-hours-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="extra-hours-modal-title">Adicionar Horas Complementares</h3>
+                <h3 class="modal-title" id="extra-hours-modal-title">Adicionar Nova Atividade</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="extra-hours-form">
                     <input type="hidden" id="extra-hours-id">
                     <div class="form-group">
-                        <label class="form-label">Atividade *</label>
-                        <input type="text" class="form-input" id="extra-hours-activity" placeholder="Ex: Palestra sobre Inovações Jurídicas" required>
+                        <label class="form-label">Nome da Atividade *</label>
+                        <input type="text" class="form-input" id="extra-hours-name" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Tipo *</label>
-                        <select class="form-select" id="extra-hours-type" required>
+                        <label class="form-label">Tipo de Atividade</label>
+                        <select class="form-select" id="extra-hours-type">
                             <option value="">Selecione o tipo</option>
-                            <option value="Palestra">Palestra</option>
-                            <option value="Seminário">Seminário</option>
-                            <option value="Curso Livre">Curso Livre</option>
-                            <option value="Evento">Evento</option>
-                            <option value="Outro">Outro</option>
+                            <option value="course">Curso</option>
+                            <option value="event">Evento</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="lecture">Palestra</option>
+                            <option value="other">Outro</option>
                         </select>
                     </div>
                     <div class="form-row">
@@ -1172,413 +1188,513 @@
                             <input type="date" class="form-input" id="extra-hours-date" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Carga Horária (h) *</label>
-                            <input type="number" step="0.5" min="0" class="form-input" id="extra-hours-amount" required>
+                            <label class="form-label">Horas *</label>
+                            <input type="number" step="0.5" min="0" class="form-input" id="extra-hours-hours" required>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-textarea" id="extra-hours-description" placeholder="Detalhes da atividade..."></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn" id="cancel-extra-hours">Cancelar</button>
-                <button class="btn btn-primary" id="save-extra-hours">Salvar Horas</button>
+                <button class="btn btn-primary" id="save-extra-hours">Salvar Atividade</button>
             </div>
         </div>
     </div>
-    
-    <div class="modal" id="import-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Importar Backup</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Selecione o arquivo de backup (.json) para restaurar seus dados.</p>
-                <div class="form-group">
-                    <label class="form-label">Arquivo de Backup</label>
-                    <input type="file" class="form-input" id="backup-file" accept=".json">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="cancel-import">Cancelar</button>
-                <button class="btn btn-primary" id="save-import">Restaurar Dados</button>
-            </div>
-        </div>
-    </div>
-    
+
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span id="toast-message"></span>
+        <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
     <script>
-        // Dados da aplicação
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let classes = JSON.parse(localStorage.getItem('classes')) || [];
-        let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
-        let semesters = JSON.parse(localStorage.getItem('semesters')) || [];
-        let extraHours = JSON.parse(localStorage.getItem('extraHours')) || [];
-        let requiredHours = localStorage.getItem('requiredHours') || 0;
+        // Dados de exemplo - MODIFICADO para incluir informações de horário e grade curricular
+        let subjects = [
+            { 
+                id: 1, 
+                name: "Direito Civil", 
+                day: "monday", 
+                start: "08:00", 
+                end: "10:00", 
+                curriculum: "Introdução ao Direito Civil. Lei de Introdução às normas do Direito Brasileiro. Pessoas naturais e jurídicas. Bens. Fatos jurídicos. Negócios jurídicos. Prescrição e decadência. Provas." 
+            },
+            { 
+                id: 2, 
+                name: "Direito Penal", 
+                day: "tuesday", 
+                start: "10:00", 
+                end: "12:00", 
+                curriculum: "Introdução ao Direito Penal. Aplicação da Lei Penal. Teoria do Crime. Tipicidade, antijuridicidade e culpabilidade. Concurso de pessoas e de crimes. Penas. Ação penal." 
+            },
+            { 
+                id: 3, 
+                name: "Direito Constitucional", 
+                day: "wednesday", 
+                start: "14:00", 
+                end: "16:00", 
+                curriculum: "Teoria da Constituição. Controle de constitucionalidade. Direitos fundamentais. Organização do Estado. Organização dos Poderes. Defesa do Estado e das instituições democráticas." 
+            },
+            { 
+                id: 4, 
+                name: "Direito Administrativo", 
+                day: "thursday", 
+                start: "16:00", 
+                end: "18:00", 
+                curriculum: "Introdução ao Direito Administrativo. Administração Pública. Atos administrativos. Poderes administrativos. Serviços públicos. Bens públicos. Responsabilidade civil do Estado." 
+            }
+        ];
 
-        // Elementos DOM
-        const taskModal = document.getElementById('task-modal');
-        const classModal = document.getElementById('class-modal');
-        const subjectModal = document.getElementById('subject-modal');
-        const semesterModal = document.getElementById('semester-modal');
-        const gradeModal = document.getElementById('grade-modal');
-        const extraHoursModal = document.getElementById('extra-hours-modal');
-        const importModal = document.getElementById('import-modal');
-        const toast = document.getElementById('toast');
-        const taskForm = document.getElementById('task-form');
-        const classForm = document.getElementById('class-form');
-        const subjectForm = document.getElementById('subject-form');
-        const semesterForm = document.getElementById('semester-form');
-        const gradeForm = document.getElementById('grade-form');
-        const extraHoursForm = document.getElementById('extra-hours-form');
+        let classes = [
+            { id: 1, subjectId: 1, day: "monday", start: "08:00", end: "10:00", location: "Sala 101", professor: "Dr. Silva" },
+            { id: 2, subjectId: 2, day: "tuesday", start: "10:00", end: "12:00", location: "Sala 102", professor: "Dra. Costa" },
+            { id: 3, subjectId: 3, day: "wednesday", start: "14:00", end: "16:00", location: "Sala 103", professor: "Dr. Oliveira" },
+            { id: 4, subjectId: 4, day: "thursday", start: "16:00", end: "18:00", location: "Sala 104", professor: "Dra. Santos" }
+        ];
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            initApp();
-            updateDate();
-            loadTasks();
-            loadClasses();
-            loadSubjects();
-            loadSemesters();
-            loadExtraHours();
-        });
-        
-        function initApp() {
-            // Event listeners para abrir modais
-            document.getElementById('add-task-btn').addEventListener('click', () => openTaskModal('add'));
-            document.getElementById('add-class-btn').addEventListener('click', () => openClassModal('add'));
-            document.getElementById('add-assignment-btn').addEventListener('click', () => openTaskModal('add', 'assignment'));
-            document.getElementById('add-exam-btn').addEventListener('click', () => openTaskModal('add', 'exam'));
-            document.getElementById('add-task-btn-schedule').addEventListener('click', () => openTaskModal('add'));
-            document.getElementById('add-class-btn-schedule').addEventListener('click', () => openClassModal('add'));
-            document.getElementById('add-class-btn-timetable').addEventListener('click', () => openClassModal('add'));
-            document.getElementById('add-subject-btn').addEventListener('click', () => openSubjectModal('add'));
-            document.getElementById('add-semester-btn').addEventListener('click', () => openSemesterModal('add'));
-            document.getElementById('add-extra-hours-btn').addEventListener('click', () => openExtraHoursModal('add'));
-            
-            // Event listeners para fechar modais
-            document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', closeModals));
-            document.getElementById('cancel-task').addEventListener('click', closeModals);
-            document.getElementById('cancel-class').addEventListener('click', closeModals);
-            document.getElementById('cancel-subject').addEventListener('click', closeModals);
-            document.getElementById('cancel-semester').addEventListener('click', closeModals);
-            document.getElementById('cancel-grade').addEventListener('click', closeModals);
-            document.getElementById('cancel-extra-hours').addEventListener('click', closeModals);
-            document.getElementById('cancel-import').addEventListener('click', closeModals);
+        let tasks = [
+            { id: 1, title: "Prova de Direito Civil", type: "exam", subjectId: 1, date: "2023-10-20", time: "14:00", priority: "high", description: "Estudar capítulos 1 a 5" },
+            { id: 2, title: "Trabalho de Penal", type: "assignment", subjectId: 2, date: "2023-10-15", time: "", priority: "medium", description: "Caso concreto sobre homicídio" },
+            { id: 3, title: "Reunião com grupo", type: "appointment", subjectId: null, date: "2023-10-12", time: "16:00", priority: "low", description: "Biblioteca central" }
+        ];
 
-            // Event listeners para salvar dados
-            document.getElementById('save-task').addEventListener('click', saveTask);
-            document.getElementById('save-class').addEventListener('click', saveClass);
-            document.getElementById('save-subject').addEventListener('click', saveSubject);
-            document.getElementById('save-semester').addEventListener('click', saveSemester);
-            document.getElementById('save-grade').addEventListener('click', saveGrade);
-            document.getElementById('save-extra-hours').addEventListener('click', saveExtraHours);
-            
-            // Event listeners de backup
-            document.getElementById('export-btn').addEventListener('click', exportData);
-            document.getElementById('import-btn').addEventListener('click', openImportModal);
-            document.getElementById('save-import').addEventListener('click', importData);
+        let semesters = [
+            { id: 1, name: "2023.2", start: "2023-08-01", end: "2023-12-15" }
+        ];
 
-            // Event listener para as horas complementares
-            document.getElementById('required-hours-input').addEventListener('change', (e) => {
-                requiredHours = parseInt(e.target.value) || 0;
-                localStorage.setItem('requiredHours', requiredHours);
-                loadExtraHours(); 
+        let extraHours = [
+            { id: 1, name: "Palestra sobre Direitos Humanos", type: "lecture", date: "2023-09-15", hours: 4, description: "Universidade Federal" },
+            { id: 2, name: "Curso de Mediação de Conflitos", type: "course", date: "2023-10-05", hours: 20, description: "Online" }
+        ];
+
+        // Função para carregar disciplinas nos selects
+        function loadSubjectsToSelects() {
+            const subjectSelects = document.querySelectorAll('select[id$="-subject"]');
+            subjectSelects.forEach(select => {
+                // Salvar o valor atual
+                const currentValue = select.value;
+                
+                // Limpar opções existentes, mantendo a primeira
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // Adicionar disciplinas
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = subject.name;
+                    select.appendChild(option);
+                });
+                
+                // Restaurar o valor anterior, se ainda existir
+                if (currentValue && Array.from(select.options).some(opt => opt.value === currentValue)) {
+                    select.value = currentValue;
+                }
             });
-            document.getElementById('required-hours-input').value = requiredHours;
-            
-            // Fechar modal clicando fora dele
-            window.addEventListener('click', function(event) {
-                if (event.target === taskModal || event.target === classModal || event.target === subjectModal || event.target === semesterModal || event.target === gradeModal || event.target === extraHoursModal || event.target === importModal) {
-                    closeModals();
+        }
+
+        // Função para carregar aulas no quadro de horários - MODIFICADA para exibir informações da disciplina
+        function loadClassesToTimetable() {
+            // Limpar todos os dias
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            days.forEach(day => {
+                const dayElement = document.querySelector(`.class-list[data-day="${day}"]`);
+                if (dayElement) {
+                    dayElement.innerHTML = '';
                 }
             });
             
-            // Funcionalidade para marcar tarefas como concluídas
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('task-check')) {
-                    const taskId = e.target.closest('.task-item').dataset.id;
-                    toggleTaskCompleted(taskId);
+            // Adicionar aulas aos respectivos dias
+            classes.forEach(classItem => {
+                const subject = subjects.find(s => s.id === classItem.subjectId);
+                if (!subject) return;
+                
+                const dayElement = document.querySelector(`.class-list[data-day="${classItem.day}"]`);
+                if (dayElement) {
+                    const classElement = document.createElement('div');
+                    classElement.className = 'class-item';
+                    classElement.innerHTML = `
+                        <div class="class-time">${classItem.start} - ${classItem.end}</div>
+                        <div class="class-subject">${subject.name}</div>
+                        <div class="class-location">${classItem.location}</div>
+                        <div class="class-professor">${classItem.professor}</div>
+                        ${subject.curriculum ? `<div class="curriculum-info">${subject.curriculum}</div>` : ''}
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${classItem.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${classItem.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    dayElement.appendChild(classElement);
                 }
             });
-
-            // Lógica para alternar painéis
-            const menuItems = document.querySelectorAll('.menu-item');
-            const panels = document.querySelectorAll('.panel');
-            const menuToggle = document.querySelector('.menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
             
-            menuItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    menuItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    panels.forEach(p => p.classList.remove('active'));
-                    
-                    const targetId = this.getAttribute('data-target');
-                    const targetPanel = document.getElementById(targetId);
-                    if (targetPanel) {
-                        targetPanel.classList.add('active');
-                    }
-                    
-                    const pageTitle = document.querySelector('.page-title');
-                    pageTitle.textContent = this.querySelector('span').textContent;
-
-                    if (window.innerWidth <= 992) {
-                        sidebar.classList.remove('active');
-                    }
-
-                    // Recarregar listas quando o painel é ativado
-                    if (targetId === 'assignments-panel' || targetId === 'exams-panel') {
-                        loadTasks();
-                    }
-                    if (targetId === 'timetable-panel') {
-                        loadClasses();
-                    }
-                    if (targetId === 'subjects-panel') {
-                        loadSubjects();
-                    }
-                    if (targetId === 'semesters-panel') {
-                        loadSemesters();
-                    }
-                    if (targetId === 'extra-hours-panel') {
-                        loadExtraHours();
-                    }
+            // Adicionar event listeners para os botões de editar e excluir
+            document.querySelectorAll('.class-item .action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const classId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    editClass(classId);
                 });
             });
+            
+            document.querySelectorAll('.class-item .action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const classId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteClass(classId);
+                });
+            });
+        }
 
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
+        // Função para carregar tarefas
+        function loadTasks() {
+            // Carregar provas
+            const examList = document.getElementById('exam-list');
+            examList.innerHTML = '';
+            
+            const exams = tasks.filter(task => task.type === 'exam');
+            if (exams.length === 0) {
+                examList.innerHTML = '<div class="empty-state"><i class="fas fa-pen-to-square"></i><p>Nenhuma prova agendada</p></div>';
+            } else {
+                exams.slice(0, 3).forEach(task => {
+                    const subject = subjects.find(s => s.id === task.subjectId);
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task-item';
+                    taskElement.innerHTML = `
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-due">${formatDate(task.date)} ${task.time ? `às ${task.time}` : ''}</div>
+                        </div>
+                        <span class="task-priority priority-${task.priority}">${getPriorityText(task.priority)}</span>
+                    `;
+                    examList.appendChild(taskElement);
+                });
+            }
+            
+            // Carregar trabalhos
+            const assignmentList = document.getElementById('assignment-list');
+            assignmentList.innerHTML = '';
+            
+            const assignments = tasks.filter(task => task.type === 'assignment');
+            if (assignments.length === 0) {
+                assignmentList.innerHTML = '<div class="empty-state"><i class="fas fa-file-lines"></i><p>Nenhum trabalho pendente</p></div>';
+            } else {
+                assignments.slice(0, 3).forEach(task => {
+                    const subject = subjects.find(s => s.id === task.subjectId);
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task-item';
+                    taskElement.innerHTML = `
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-due">${formatDate(task.date)} ${task.time ? `às ${task.time}` : ''}</div>
+                        </div>
+                        <span class="task-priority priority-${task.priority}">${getPriorityText(task.priority)}</span>
+                    `;
+                    assignmentList.appendChild(taskElement);
+                });
+            }
+            
+            // Carregar compromissos
+            const appointmentList = document.getElementById('appointment-list');
+            appointmentList.innerHTML = '';
+            
+            const appointments = tasks.filter(task => task.type === 'appointment');
+            if (appointments.length === 0) {
+                appointmentList.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>Nenhum compromisso</p></div>';
+            } else {
+                appointments.slice(0, 3).forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task-item';
+                    taskElement.innerHTML = `
+                        <div class="task-info">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-due">${formatDate(task.date)} ${task.time ? `às ${task.time}` : ''}</div>
+                        </div>
+                        <span class="task-priority priority-${task.priority}">${getPriorityText(task.priority)}</span>
+                    `;
+                    appointmentList.appendChild(taskElement);
+                });
+            }
+            
+            // Carregar lista completa de provas
+            const examsFullList = document.getElementById('exams-full-list');
+            examsFullList.innerHTML = '';
+            
+            if (exams.length === 0) {
+                examsFullList.innerHTML = '<div class="empty-state"><i class="fas fa-pen-to-square"></i><p>Nenhuma prova agendada</p></div>';
+            } else {
+                exams.forEach(task => {
+                    const subject = subjects.find(s => s.id === task.subjectId);
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'item-list-row';
+                    taskElement.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${task.title}</div>
+                            <div class="item-due">${formatDate(task.date)} ${task.time ? `às ${task.time}` : ''}${subject ? ` | ${subject.name}` : ''}</div>
+                        </div>
+                        <span class="item-priority priority-${task.priority}">${getPriorityText(task.priority)}</span>
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${task.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${task.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    examsFullList.appendChild(taskElement);
+                });
+            }
+            
+            // Carregar lista completa de trabalhos
+            const assignmentsFullList = document.getElementById('assignments-full-list');
+            assignmentsFullList.innerHTML = '';
+            
+            if (assignments.length === 0) {
+                assignmentsFullList.innerHTML = '<div class="empty-state"><i class="fas fa-file-lines"></i><p>Nenhum trabalho pendente</p></div>';
+            } else {
+                assignments.forEach(task => {
+                    const subject = subjects.find(s => s.id === task.subjectId);
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'item-list-row';
+                    taskElement.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${task.title}</div>
+                            <div class="item-due">${formatDate(task.date)} ${task.time ? `às ${task.time}` : ''}${subject ? ` | ${subject.name}` : ''}</div>
+                        </div>
+                        <span class="item-priority priority-${task.priority}">${getPriorityText(task.priority)}</span>
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${task.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${task.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    assignmentsFullList.appendChild(taskElement);
+                });
+            }
+            
+            // Adicionar event listeners para os botões de editar e excluir
+            document.querySelectorAll('#exams-full-list .action-btn.edit, #assignments-full-list .action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const taskId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    editTask(taskId);
+                });
             });
             
-            // Lógica para editar e excluir itens
-            document.getElementById('assignments-full-list').addEventListener('click', handleItemActions);
-            document.getElementById('exams-full-list').addEventListener('click', handleItemActions);
-            document.getElementById('timetable-grid').addEventListener('click', handleClassActions);
-            document.getElementById('subjects-full-list').addEventListener('click', handleSubjectActions);
-            document.getElementById('semesters-list').addEventListener('click', handleSemesterActions);
-            document.getElementById('extra-hours-list').addEventListener('click', handleExtraHoursActions);
+            document.querySelectorAll('#exams-full-list .action-btn.delete, #assignments-full-list .action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const taskId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteTask(taskId);
+                });
+            });
         }
 
-        function handleItemActions(e) {
-            const btn = e.target.closest('.action-btn');
-            if (!btn) return;
-
-            const itemId = parseInt(btn.dataset.id);
-            const taskToEdit = tasks.find(t => t.id === itemId);
-
-            if (btn.classList.contains('edit')) {
-                openTaskModal('edit', taskToEdit.type, taskToEdit);
-            } else if (btn.classList.contains('delete')) {
-                if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-                    deleteTask(itemId);
-                }
-            } else if (btn.classList.contains('grade')) {
-                openGradeModal(taskToEdit);
+        // Função para carregar disciplinas - MODIFICADA para exibir informações adicionais
+        function loadSubjects() {
+            const subjectsFullList = document.getElementById('subjects-full-list');
+            subjectsFullList.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                subjectsFullList.innerHTML = '<div class="empty-state"><i class="fas fa-book"></i><p>Nenhuma disciplina cadastrada</p></div>';
+            } else {
+                subjects.forEach(subject => {
+                    const subjectElement = document.createElement('div');
+                    subjectElement.className = 'item-list-row';
+                    
+                    // Obter texto do dia da semana
+                    const dayText = getDayText(subject.day);
+                    
+                    subjectElement.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${subject.name}</div>
+                            <div class="item-due">${dayText} | ${subject.start} - ${subject.end}</div>
+                            ${subject.curriculum ? `<div class="curriculum-info">${subject.curriculum}</div>` : ''}
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${subject.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${subject.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    subjectsFullList.appendChild(subjectElement);
+                });
             }
-        }
-        
-        function handleClassActions(e) {
-            const btn = e.target.closest('.action-btn');
-            if (!btn) return;
-        
-            const classId = parseInt(btn.dataset.id);
-        
-            if (btn.classList.contains('edit')) {
-                const classToEdit = classes.find(c => c.id === classId);
-                openClassModal('edit', classToEdit);
-            } else if (btn.classList.contains('delete')) {
-                if (confirm('Tem certeza que deseja excluir esta aula?')) {
-                    deleteClass(classId);
-                }
-            }
-        }
-
-        function handleSubjectActions(e) {
-            const btn = e.target.closest('.action-btn');
-            if (!btn) return;
-
-            const subjectId = parseInt(btn.dataset.id);
-
-            if (btn.classList.contains('edit')) {
-                const subjectToEdit = subjects.find(s => s.id === subjectId);
-                openSubjectModal('edit', subjectToEdit);
-            } else if (btn.classList.contains('delete')) {
-                if (confirm('Tem certeza que deseja excluir esta disciplina?')) {
+            
+            // Adicionar event listeners para os botões de editar e excluir
+            document.querySelectorAll('#subjects-full-list .action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const subjectId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    editSubject(subjectId);
+                });
+            });
+            
+            document.querySelectorAll('#subjects-full-list .action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const subjectId = parseInt(e.currentTarget.getAttribute('data-id'));
                     deleteSubject(subjectId);
-                }
-            }
+                });
+            });
         }
-        
-        function handleSemesterActions(e) {
-            const btn = e.target.closest('.action-btn');
-            if (!btn) return;
 
-            const semesterId = parseInt(btn.dataset.id);
-
-            if (btn.classList.contains('edit')) {
-                const semesterToEdit = semesters.find(s => s.id === semesterId);
-                openSemesterModal('edit', semesterToEdit);
-            } else if (btn.classList.contains('delete')) {
-                if (confirm('Tem certeza que deseja excluir este semestre?')) {
+        // Função para carregar semestres
+        function loadSemesters() {
+            const semestersList = document.getElementById('semesters-list');
+            semestersList.innerHTML = '';
+            
+            if (semesters.length === 0) {
+                semestersList.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i><p>Nenhum semestre cadastrado</p></div>';
+            } else {
+                semesters.forEach(semester => {
+                    const semesterElement = document.createElement('div');
+                    semesterElement.className = 'item-list-row';
+                    semesterElement.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${semester.name}</div>
+                            <div class="item-due">${formatDate(semester.start)} a ${formatDate(semester.end)}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${semester.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${semester.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    semestersList.appendChild(semesterElement);
+                });
+            }
+            
+            // Adicionar event listeners para os botões de editar e excluir
+            document.querySelectorAll('#semesters-list .action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const semesterId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    editSemester(semesterId);
+                });
+            });
+            
+            document.querySelectorAll('#semesters-list .action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const semesterId = parseInt(e.currentTarget.getAttribute('data-id'));
                     deleteSemester(semesterId);
-                }
-            }
+                });
+            });
         }
-        
-        function handleExtraHoursActions(e) {
-            const btn = e.target.closest('.action-btn');
-            if (!btn) return;
 
-            const hoursId = parseInt(btn.dataset.id);
-
-            if (btn.classList.contains('edit')) {
-                const hoursToEdit = extraHours.find(h => h.id === hoursId);
-                openExtraHoursModal('edit', hoursToEdit);
-            } else if (btn.classList.contains('delete')) {
-                if (confirm('Tem certeza que deseja excluir esta atividade?')) {
-                    deleteExtraHours(hoursId);
-                }
-            }
-        }
-        
-        function openTaskModal(mode, type = null, taskData = null) {
-            document.getElementById('task-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Tarefa' : 'Editar Tarefa';
-            document.getElementById('task-id').value = taskData ? taskData.id : '';
-            taskForm.reset();
+        // Função para carregar horas complementares
+        function loadExtraHours() {
+            const extraHoursList = document.getElementById('extra-hours-list');
+            extraHoursList.innerHTML = '';
             
-            if (taskData) {
-                document.getElementById('task-title').value = taskData.title;
-                document.getElementById('task-type').value = taskData.type;
-                document.getElementById('task-subject').value = taskData.subject;
-                document.getElementById('task-date').value = taskData.date;
-                document.getElementById('task-time').value = taskData.time;
-                document.getElementById('task-priority').value = taskData.priority;
-                document.getElementById('task-description').value = taskData.description;
+            if (extraHours.length === 0) {
+                extraHoursList.innerHTML = '<div class="empty-state"><i class="fas fa-award"></i><p>Nenhuma atividade cadastrada</p></div>';
+            } else {
+                extraHours.forEach(activity => {
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'item-list-row';
+                    activityElement.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${activity.name}</div>
+                            <div class="item-due">${formatDate(activity.date)} | ${activity.hours} horas${activity.type ? ` | ${getActivityTypeText(activity.type)}` : ''}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn edit" data-id="${activity.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="${activity.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    extraHoursList.appendChild(activityElement);
+                });
             }
             
-            if (type) {
-                document.getElementById('task-type').value = type;
-            }
+            // Calcular total de horas
+            const totalHours = extraHours.reduce((sum, activity) => sum + activity.hours, 0);
+            document.getElementById('total-extra-hours').textContent = totalHours;
             
-            populateSubjectSelect('task-subject');
-            taskModal.style.display = 'flex';
-        }
-        
-        function openClassModal(mode, classData = null) {
-            document.getElementById('class-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Aula' : 'Editar Aula';
-            document.getElementById('class-id').value = classData ? classData.id : '';
-            classForm.reset();
-
-            if (classData) {
-                document.getElementById('class-subject').value = classData.subject;
-                document.getElementById('class-day').value = classData.day;
-                document.getElementById('class-start').value = classData.start;
-                document.getElementById('class-end').value = classData.end;
-                document.getElementById('class-location').value = classData.location;
-                document.getElementById('class-professor').value = classData.professor;
-            }
-
-            populateSubjectSelect('class-subject');
-            classModal.style.display = 'flex';
-        }
-
-        function openSubjectModal(mode, subjectData = null) {
-            document.getElementById('subject-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Disciplina' : 'Editar Disciplina';
-            document.getElementById('subject-id').value = subjectData ? subjectData.id : '';
-            subjectForm.reset();
-
-            if (subjectData) {
-                document.getElementById('subject-name').value = subjectData.name;
-            }
-            subjectModal.style.display = 'flex';
-        }
-        
-        function openSemesterModal(mode, semesterData = null) {
-            document.getElementById('semester-modal-title').textContent = mode === 'add' ? 'Adicionar Novo Semestre' : 'Editar Semestre';
-            document.getElementById('semester-id').value = semesterData ? semesterData.id : '';
-            semesterForm.reset();
-
-            if (semesterData) {
-                document.getElementById('semester-name').value = semesterData.name;
-                document.getElementById('semester-start').value = semesterData.start;
-                document.getElementById('semester-end').value = semesterData.end;
-            }
-            semesterModal.style.display = 'flex';
-        }
-        
-        function openGradeModal(taskData) {
-            document.getElementById('grade-modal-title').textContent = `Nota de ${taskData.type === 'exam' ? 'Prova' : 'Trabalho'}`;
-            document.getElementById('grade-task-id').value = taskData.id;
-            document.getElementById('grade-task-label').textContent = `${taskData.title} (${taskData.subject || 'Sem disciplina'})`;
-            document.getElementById('task-grade').value = taskData.grade || '';
-            gradeModal.style.display = 'flex';
-        }
-        
-        function openExtraHoursModal(mode, hoursData = null) {
-            document.getElementById('extra-hours-modal-title').textContent = mode === 'add' ? 'Adicionar Nova Atividade' : 'Editar Atividade';
-            document.getElementById('extra-hours-id').value = hoursData ? hoursData.id : '';
-            extraHoursForm.reset();
+            // Calcular horas restantes (assumindo 200 horas necessárias)
+            const requiredHours = 200; // Valor padrão
+            document.getElementById('remaining-hours').textContent = Math.max(0, requiredHours - totalHours);
             
-            if (hoursData) {
-                document.getElementById('extra-hours-activity').value = hoursData.activity;
-                document.getElementById('extra-hours-type').value = hoursData.type;
-                document.getElementById('extra-hours-date').value = hoursData.date;
-                document.getElementById('extra-hours-amount').value = hoursData.amount;
-            }
+            // Adicionar event listeners para os botões de editar e excluir
+            document.querySelectorAll('#extra-hours-list .action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const activityId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    editExtraHours(activityId);
+                });
+            });
             
-            extraHoursModal.style.display = 'flex';
-        }
-        
-        function openImportModal() {
-            importModal.style.display = 'flex';
+            document.querySelectorAll('#extra-hours-list .action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const activityId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteExtraHours(activityId);
+                });
+            });
         }
 
-        function closeModals() {
-            taskModal.style.display = 'none';
-            classModal.style.display = 'none';
-            subjectModal.style.display = 'none';
-            semesterModal.style.display = 'none';
-            gradeModal.style.display = 'none';
-            extraHoursModal.style.display = 'none';
-            importModal.style.display = 'none';
-            taskForm.reset();
-            classForm.reset();
-            subjectForm.reset();
-            semesterForm.reset();
-            gradeForm.reset();
-            extraHoursForm.reset();
-            document.getElementById('backup-file').value = null;
+        // Funções utilitárias
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
         }
-        
-        function updateDate() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const today = new Date();
-            document.querySelector('.date-display').textContent = today.toLocaleDateString('pt-BR', options);
-            
-            const todayISO = today.toISOString().split('T')[0];
-            document.getElementById('task-date').min = todayISO;
+
+        function getPriorityText(priority) {
+            const priorities = {
+                'high': 'Alta',
+                'medium': 'Média',
+                'low': 'Baixa'
+            };
+            return priorities[priority] || priority;
         }
-        
-        function showToast(message, type = 'success') {
+
+        function getActivityTypeText(type) {
+            const types = {
+                'course': 'Curso',
+                'event': 'Evento',
+                'workshop': 'Workshop',
+                'lecture': 'Palestra',
+                'other': 'Outro'
+            };
+            return types[type] || type;
+        }
+
+        // Nova função para obter texto do dia da semana
+        function getDayText(day) {
+            const days = {
+                'monday': 'Segunda-feira',
+                'tuesday': 'Terça-feira',
+                'wednesday': 'Quarta-feira',
+                'thursday': 'Quinta-feira',
+                'friday': 'Sexta-feira',
+                'saturday': 'Sábado',
+                'sunday': 'Domingo'
+            };
+            return days[day] || day;
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
-            const toastIcon = toast.querySelector('i');
             
             toastMessage.textContent = message;
-            toast.className = 'toast';
             
-            if (type === 'error') {
+            if (isError) {
                 toast.classList.add('error');
-                toastIcon.className = 'fas fa-exclamation-circle';
-            } else if (type === 'warning') {
-                toast.classList.add('warning');
-                toastIcon.className = 'fas fa-exclamation-triangle';
             } else {
-                toastIcon.classList.remove('fas', 'fa-exclamation-circle', 'fa-exclamation-triangle');
-                toastIcon.className = 'fas fa-check-circle';
+                toast.classList.remove('error');
             }
             
             toast.classList.add('show');
@@ -1587,580 +1703,560 @@
                 toast.classList.remove('show');
             }, 3000);
         }
-        
-        function saveTask() {
-            const id = document.getElementById('task-id').value;
-            const title = document.getElementById('task-title').value;
-            const type = document.getElementById('task-type').value;
-            const subject = document.getElementById('task-subject').value;
-            const date = document.getElementById('task-date').value;
-            const time = document.getElementById('task-time').value;
-            const priority = document.getElementById('task-priority').value;
-            const description = document.getElementById('task-description').value;
-            
-            if (!title || !type || !date || !priority) {
-                showToast('Preencha todos os campos obrigatórios!', 'error');
-                return;
-            }
-            
-            if (id) {
-                // Modo de Edição
-                const taskIndex = tasks.findIndex(t => t.id === parseInt(id));
-                if (taskIndex !== -1) {
-                    tasks[taskIndex] = {
-                        id: parseInt(id),
-                        title, type, subject, date, time, priority, description,
-                        completed: tasks[taskIndex].completed,
-                        grade: tasks[taskIndex].grade
-                    };
-                    showToast('Tarefa atualizada com sucesso!');
-                }
-            } else {
-                // Modo de Adição
-                const newTask = {
-                    id: Date.now(),
-                    title, type, subject, date, time, priority, description,
-                    completed: false,
-                    grade: null
-                };
-                tasks.push(newTask);
-                showToast('Tarefa adicionada com sucesso!');
-            }
-            
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+        // Funções para manipulação de dados
+        function addTask(taskData) {
+            const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+            tasks.push({ id: newId, ...taskData });
+            saveToLocalStorage();
             loadTasks();
-            closeModals();
+            showToast('Tarefa adicionada com sucesso!');
         }
 
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            loadTasks();
-            showToast('Tarefa excluída com sucesso!', 'warning');
-        }
-
-        function toggleTaskCompleted(id) {
-            const task = tasks.find(t => t.id === parseInt(id));
-            if (task) {
-                task.completed = !task.completed;
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                loadTasks();
-                showToast(`Tarefa ${task.completed ? 'concluída' : 'reaberta'}!`);
-            }
-        }
-        
-        function saveClass() {
-            const id = document.getElementById('class-id').value;
-            const subject = document.getElementById('class-subject').value;
-            const day = document.getElementById('class-day').value;
-            const start = document.getElementById('class-start').value;
-            const end = document.getElementById('class-end').value;
-            const location = document.getElementById('class-location').value;
-            const professor = document.getElementById('class-professor').value;
-            
-            if (!subject || !day || !start || !end) {
-                showToast('Preencha todos os campos obrigatórios!', 'error');
-                return;
-            }
-            
-            if (id) {
-                // Modo de Edição
-                const classIndex = classes.findIndex(c => c.id === parseInt(id));
-                if (classIndex !== -1) {
-                    classes[classIndex] = {
-                        id: parseInt(id),
-                        subject, day, start, end, location, professor
-                    };
-                    showToast('Aula atualizada com sucesso!');
-                }
-            } else {
-                // Modo de Adição
-                const newClass = {
-                    id: Date.now(),
-                    subject, day, start, end, location, professor
-                };
-                classes.push(newClass);
-                showToast('Aula adicionada com sucesso!');
-            }
-            
-            localStorage.setItem('classes', JSON.stringify(classes));
-            loadClasses();
-            closeModals();
-        }
-
-        function deleteClass(id) {
-            classes = classes.filter(c => c.id !== id);
-            localStorage.setItem('classes', JSON.stringify(classes));
-            loadClasses();
-            showToast('Aula excluída com sucesso!', 'warning');
-        }
-
-        function saveSubject() {
-            const id = document.getElementById('subject-id').value;
-            const name = document.getElementById('subject-name').value.trim();
-
-            if (!name) {
-                showToast('O nome da disciplina é obrigatório!', 'error');
-                return;
-            }
-
-            if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== parseInt(id))) {
-                showToast('Disciplina já existe!', 'error');
-                return;
-            }
-
-            if (id) {
-                const subjectIndex = subjects.findIndex(s => s.id === parseInt(id));
-                if (subjectIndex !== -1) {
-                    subjects[subjectIndex].name = name;
-                    showToast('Disciplina atualizada com sucesso!');
-                }
-            } else {
-                const newSubject = { id: Date.now(), name };
-                subjects.push(newSubject);
-                showToast('Disciplina adicionada com sucesso!');
-            }
-
-            localStorage.setItem('subjects', JSON.stringify(subjects));
-            loadSubjects();
-            closeModals();
-        }
-
-        function deleteSubject(id) {
-            const subjectName = subjects.find(s => s.id === id)?.name;
-            const tasksUsingSubject = tasks.some(t => t.subject === subjectName);
-            const classesUsingSubject = classes.some(c => c.subject === subjectName);
-
-            if (tasksUsingSubject || classesUsingSubject) {
-                showToast('Não é possível excluir a disciplina. Ela está vinculada a tarefas ou aulas.', 'error');
-                return;
-            }
-            
-            subjects = subjects.filter(s => s.id !== id);
-            localStorage.setItem('subjects', JSON.stringify(subjects));
-            loadSubjects();
-            showToast('Disciplina excluída com sucesso!', 'warning');
-        }
-
-        function saveSemester() {
-            const id = document.getElementById('semester-id').value;
-            const name = document.getElementById('semester-name').value.trim();
-            const start = document.getElementById('semester-start').value;
-            const end = document.getElementById('semester-end').value;
-
-            if (!name || !start || !end) {
-                showToast('Preencha todos os campos obrigatórios!', 'error');
-                return;
-            }
-
-            if (id) {
-                const semesterIndex = semesters.findIndex(s => s.id === parseInt(id));
-                if (semesterIndex !== -1) {
-                    semesters[semesterIndex] = { id: parseInt(id), name, start, end };
-                    showToast('Semestre atualizado com sucesso!');
-                }
-            } else {
-                const newSemester = { id: Date.now(), name, start, end };
-                semesters.push(newSemester);
-                showToast('Semestre adicionado com sucesso!');
-            }
-
-            localStorage.setItem('semesters', JSON.stringify(semesters));
-            loadSemesters();
-            closeModals();
-        }
-
-        function deleteSemester(id) {
-            semesters = semesters.filter(s => s.id !== id);
-            localStorage.setItem('semesters', JSON.stringify(semesters));
-            loadSemesters();
-            showToast('Semestre excluído com sucesso!', 'warning');
-        }
-        
-        function saveGrade() {
-            const taskId = parseInt(document.getElementById('grade-task-id').value);
-            const grade = parseFloat(document.getElementById('task-grade').value);
-            
+        function editTask(taskId) {
             const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
             
-            if (task) {
-                task.grade = grade;
-                localStorage.setItem('tasks', JSON.stringify(tasks));
+            document.getElementById('task-modal-title').textContent = 'Editar Tarefa';
+            document.getElementById('task-id').value = task.id;
+            document.getElementById('task-title').value = task.title;
+            document.getElementById('task-type').value = task.type;
+            document.getElementById('task-subject').value = task.subjectId || '';
+            document.getElementById('task-date').value = task.date;
+            document.getElementById('task-time').value = task.time || '';
+            document.getElementById('task-priority').value = task.priority;
+            document.getElementById('task-description').value = task.description || '';
+            
+            openModal('task-modal');
+        }
+
+        function updateTask(taskId, taskData) {
+            const index = tasks.findIndex(t => t.id === taskId);
+            if (index === -1) return;
+            
+            tasks[index] = { id: taskId, ...taskData };
+            saveToLocalStorage();
+            loadTasks();
+            showToast('Tarefa atualizada com sucesso!');
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                saveToLocalStorage();
                 loadTasks();
-                showToast('Nota salva com sucesso!');
-                closeModals();
-            } else {
-                showToast('Tarefa não encontrada!', 'error');
+                showToast('Tarefa excluída com sucesso!');
             }
         }
-        
-        function saveExtraHours() {
-            const id = document.getElementById('extra-hours-id').value;
-            const activity = document.getElementById('extra-hours-activity').value.trim();
-            const type = document.getElementById('extra-hours-type').value;
-            const date = document.getElementById('extra-hours-date').value;
-            const amount = parseFloat(document.getElementById('extra-hours-amount').value);
+
+        function addClass(classData) {
+            const newId = classes.length > 0 ? Math.max(...classes.map(c => c.id)) + 1 : 1;
+            classes.push({ id: newId, ...classData });
+            saveToLocalStorage();
+            loadClassesToTimetable();
+            showToast('Aula adicionada com sucesso!');
+        }
+
+        function editClass(classId) {
+            const classItem = classes.find(c => c.id === classId);
+            if (!classItem) return;
             
-            if (!activity || !type || !date || isNaN(amount) || amount <= 0) {
-                showToast('Preencha todos os campos corretamente!', 'error');
+            document.getElementById('class-modal-title').textContent = 'Editar Aula';
+            document.getElementById('class-id').value = classItem.id;
+            document.getElementById('class-subject').value = classItem.subjectId;
+            document.getElementById('class-day').value = classItem.day;
+            document.getElementById('class-start').value = classItem.start;
+            document.getElementById('class-end').value = classItem.end;
+            document.getElementById('class-location').value = classItem.location || '';
+            document.getElementById('class-professor').value = classItem.professor || '';
+            
+            openModal('class-modal');
+        }
+
+        function updateClass(classId, classData) {
+            const index = classes.findIndex(c => c.id === classId);
+            if (index === -1) return;
+            
+            classes[index] = { id: classId, ...classData };
+            saveToLocalStorage();
+            loadClassesToTimetable();
+            showToast('Aula atualizada com sucesso!');
+        }
+
+        function deleteClass(classId) {
+            if (confirm('Tem certeza que deseja excluir esta aula?')) {
+                classes = classes.filter(c => c.id !== classId);
+                saveToLocalStorage();
+                loadClassesToTimetable();
+                showToast('Aula excluída com sucesso!');
+            }
+        }
+
+        // MODIFICADA para incluir informações adicionais da disciplina
+        function addSubject(subjectData) {
+            const newId = subjects.length > 0 ? Math.max(...subjects.map(s => s.id)) + 1 : 1;
+            subjects.push({ id: newId, ...subjectData });
+            saveToLocalStorage();
+            loadSubjects();
+            loadSubjectsToSelects();
+            
+            // Se a disciplina tiver dia e horário, criar uma aula automaticamente
+            if (subjectData.day && subjectData.start && subjectData.end) {
+                const classData = {
+                    subjectId: newId,
+                    day: subjectData.day,
+                    start: subjectData.start,
+                    end: subjectData.end,
+                    location: "",
+                    professor: ""
+                };
+                addClass(classData);
+            }
+            
+            showToast('Disciplina adicionada com sucesso!');
+        }
+
+        // MODIFICADA para editar informações adicionais da disciplina
+        function editSubject(subjectId) {
+            const subject = subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            
+            document.getElementById('subject-modal-title').textContent = 'Editar Disciplina';
+            document.getElementById('subject-id').value = subject.id;
+            document.getElementById('subject-name').value = subject.name;
+            document.getElementById('subject-day').value = subject.day || '';
+            document.getElementById('subject-start').value = subject.start || '';
+            document.getElementById('subject-end').value = subject.end || '';
+            document.getElementById('subject-curriculum').value = subject.curriculum || '';
+            
+            openModal('subject-modal');
+        }
+
+        // MODIFICADA para atualizar informações adicionais da disciplina
+        function updateSubject(subjectId, subjectData) {
+            const index = subjects.findIndex(s => s.id === subjectId);
+            if (index === -1) return;
+            
+            subjects[index] = { id: subjectId, ...subjectData };
+            saveToLocalStorage();
+            loadSubjects();
+            loadSubjectsToSelects();
+            
+            // Atualizar também as aulas relacionadas a esta disciplina
+            const classIndex = classes.findIndex(c => c.subjectId === subjectId);
+            if (classIndex !== -1 && subjectData.day && subjectData.start && subjectData.end) {
+                classes[classIndex] = {
+                    ...classes[classIndex],
+                    day: subjectData.day,
+                    start: subjectData.start,
+                    end: subjectData.end
+                };
+                saveToLocalStorage();
+                loadClassesToTimetable();
+            }
+            
+            showToast('Disciplina atualizada com sucesso!');
+        }
+
+        function deleteSubject(subjectId) {
+            // Verificar se a disciplina está sendo usada em alguma aula
+            const classUsingSubject = classes.find(c => c.subjectId === subjectId);
+            if (classUsingSubject) {
+                showToast('Não é possível excluir esta disciplina pois ela está sendo usada em uma aula.', true);
                 return;
             }
             
-            if (id) {
-                const hoursIndex = extraHours.findIndex(h => h.id === parseInt(id));
-                if (hoursIndex !== -1) {
-                    extraHours[hoursIndex] = { id: parseInt(id), activity, type, date, amount };
-                    showToast('Atividade atualizada com sucesso!');
-                }
-            } else {
-                const newEntry = { id: Date.now(), activity, type, date, amount };
-                extraHours.push(newEntry);
-                showToast('Atividade adicionada com sucesso!');
+            // Verificar se a disciplina está sendo usada em alguma tarefa
+            const taskUsingSubject = tasks.find(t => t.subjectId === subjectId);
+            if (taskUsingSubject) {
+                showToast('Não é possível excluir esta disciplina pois ela está sendo usada em uma tarefa.', true);
+                return;
             }
             
-            localStorage.setItem('extraHours', JSON.stringify(extraHours));
+            if (confirm('Tem certeza que deseja excluir esta disciplina?')) {
+                subjects = subjects.filter(s => s.id !== subjectId);
+                saveToLocalStorage();
+                loadSubjects();
+                loadSubjectsToSelects();
+                showToast('Disciplina excluída com sucesso!');
+            }
+        }
+
+        function addSemester(semesterData) {
+            const newId = semesters.length > 0 ? Math.max(...semesters.map(s => s.id)) + 1 : 1;
+            semesters.push({ id: newId, ...semesterData });
+            saveToLocalStorage();
+            loadSemesters();
+            showToast('Semestre adicionado com sucesso!');
+        }
+
+        function editSemester(semesterId) {
+            const semester = semesters.find(s => s.id === semesterId);
+            if (!semester) return;
+            
+            document.getElementById('semester-modal-title').textContent = 'Editar Semestre';
+            document.getElementById('semester-id').value = semester.id;
+            document.getElementById('semester-name').value = semester.name;
+            document.getElementById('semester-start').value = semester.start;
+            document.getElementById('semester-end').value = semester.end;
+            
+            openModal('semester-modal');
+        }
+
+        function updateSemester(semesterId, semesterData) {
+            const index = semesters.findIndex(s => s.id === semesterId);
+            if (index === -1) return;
+            
+            semesters[index] = { id: semesterId, ...semesterData };
+            saveToLocalStorage();
+            loadSemesters();
+            showToast('Semestre atualizada com sucesso!');
+        }
+
+        function deleteSemester(semesterId) {
+            if (confirm('Tem certeza que deseja excluir este semestre?')) {
+                semesters = semesters.filter(s => s.id !== semesterId);
+                saveToLocalStorage();
+                loadSemesters();
+                showToast('Semestre excluído com sucesso!');
+            }
+        }
+
+        function addExtraHours(activityData) {
+            const newId = extraHours.length > 0 ? Math.max(...extraHours.map(a => a.id)) + 1 : 1;
+            extraHours.push({ id: newId, ...activityData });
+            saveToLocalStorage();
             loadExtraHours();
-            closeModals();
+            showToast('Atividade adicionada com sucesso!');
         }
-        
-        function deleteExtraHours(id) {
-            extraHours = extraHours.filter(h => h.id !== id);
-            localStorage.setItem('extraHours', JSON.stringify(extraHours));
+
+        function editExtraHours(activityId) {
+            const activity = extraHours.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            document.getElementById('extra-hours-modal-title').textContent = 'Editar Atividade';
+            document.getElementById('extra-hours-id').value = activity.id;
+            document.getElementById('extra-hours-name').value = activity.name;
+            document.getElementById('extra-hours-type').value = activity.type || '';
+            document.getElementById('extra-hours-date').value = activity.date;
+            document.getElementById('extra-hours-hours').value = activity.hours;
+            document.getElementById('extra-hours-description').value = activity.description || '';
+            
+            openModal('extra-hours-modal');
+        }
+
+        function updateExtraHours(activityId, activityData) {
+            const index = extraHours.findIndex(a => a.id === activityId);
+            if (index === -1) return;
+            
+            extraHours[index] = { id: activityId, ...activityData };
+            saveToLocalStorage();
             loadExtraHours();
-            showToast('Atividade excluída com sucesso!', 'warning');
-        }
-        
-        function exportData() {
-            const data = {
-                tasks: tasks,
-                classes: classes,
-                subjects: subjects,
-                semesters: semesters,
-                extraHours: extraHours
-            };
-            const dataStr = JSON.stringify(data, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `lexscholar_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('Backup exportado com sucesso!');
-        }
-        
-        function importData() {
-            const fileInput = document.getElementById('backup-file');
-            const file = fileInput.files[0];
-            if (!file) {
-                showToast('Nenhum arquivo selecionado!', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.tasks && importedData.classes && importedData.subjects) {
-                        tasks = importedData.tasks;
-                        classes = importedData.classes;
-                        subjects = importedData.subjects;
-                        semesters = importedData.semesters || [];
-                        extraHours = importedData.extraHours || [];
-                        
-                        localStorage.setItem('tasks', JSON.stringify(tasks));
-                        localStorage.setItem('classes', JSON.stringify(classes));
-                        localStorage.setItem('subjects', JSON.stringify(subjects));
-                        localStorage.setItem('semesters', JSON.stringify(semesters));
-                        localStorage.setItem('extraHours', JSON.stringify(extraHours));
-                        
-                        loadTasks();
-                        loadClasses();
-                        loadSubjects();
-                        loadSemesters();
-                        loadExtraHours();
-                        closeModals();
-                        showToast('Dados restaurados com sucesso!');
-                    } else {
-                        showToast('O arquivo de backup é inválido.', 'error');
-                    }
-                } catch (error) {
-                    showToast('Falha ao ler o arquivo. Certifique-se de que é um JSON válido.', 'error');
-                    console.error(error);
-                }
-            };
-            reader.readAsText(file);
+            showToast('Atividade atualizada com sucesso!');
         }
 
-        function populateSubjectSelect(selectId) {
-            const select = document.getElementById(selectId);
-            const selectedValue = select.value;
-            select.innerHTML = '<option value="">Selecione a disciplina</option>';
-            
-            subjects.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject.name;
-                option.textContent = subject.name;
-                select.appendChild(option);
-            });
-            select.value = selectedValue;
-        }
-        
-        function loadTasks() {
-            const examList = document.getElementById('exam-list');
-            const assignmentList = document.getElementById('assignment-list');
-            const appointmentList = document.getElementById('appointment-list');
-            const examsFullList = document.getElementById('exams-full-list');
-            const assignmentsFullList = document.getElementById('assignments-full-list');
-            
-            // Limpar listas
-            examList.innerHTML = '';
-            assignmentList.innerHTML = '';
-            appointmentList.innerHTML = '';
-            examsFullList.innerHTML = '';
-            assignmentsFullList.innerHTML = '';
-
-            // Filtrar e renderizar tarefas no Dashboard
-            const exams = tasks.filter(task => task.type === 'exam' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
-            const assignments = tasks.filter(task => task.type === 'assignment' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
-            const appointments = tasks.filter(task => task.type === 'appointment' && !task.completed).sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            renderTasksToDashboard(exams, examList);
-            renderTasksToDashboard(assignments, assignmentList);
-            renderTasksToDashboard(appointments, appointmentList);
-            
-            // Renderizar listas completas nos painéis de Trabalho e Provas
-            renderFullList(tasks.filter(t => t.type === 'exam'), examsFullList, 'Provas');
-            renderFullList(tasks.filter(t => t.type === 'assignment'), assignmentsFullList, 'Trabalhos');
-        }
-
-        function renderTasksToDashboard(taskList, parentElement) {
-            if (taskList.length === 0) {
-                const type = parentElement.id.replace('-list', '');
-                const icon = type === 'exam' ? 'fas fa-pen-to-square' : (type === 'assignment' ? 'fas fa-file-lines' : 'fas fa-calendar-check');
-                const message = type === 'exam' ? 'Nenhuma prova agendada' : (type === 'assignment' ? 'Nenhum trabalho pendente' : 'Nenhum compromisso');
-                parentElement.innerHTML = `<div class="empty-state"><i class="${icon}"></i><div>${message}</div></div>`;
-            } else {
-                const limitedList = taskList.slice(0, 3);
-                limitedList.forEach(task => {
-                    parentElement.appendChild(createTaskElement(task));
-                });
-            }
-        }
-        
-        function renderFullList(itemList, parentElement, typeTitle) {
-            if (itemList.length === 0) {
-                const icon = typeTitle === 'Provas' ? 'fas fa-pen-to-square' : (typeTitle === 'Trabalhos' ? 'fas fa-file-lines' : 'fas fa-award');
-                parentElement.innerHTML = `<div class="empty-state"><i class="${icon}"></i><div>Nenhuma ${typeTitle.toLowerCase()} cadastrada.</div></div>`;
-            } else {
-                itemList.forEach(item => {
-                    parentElement.appendChild(createFullItemElement(item));
-                });
-            }
-        }
-        
-        function createTaskElement(task) {
-            const taskItem = document.createElement('div');
-            taskItem.className = 'task-item';
-            taskItem.dataset.id = task.id;
-            
-            const priorityClass = `priority-${task.priority}`;
-            
-            taskItem.innerHTML = `
-                <input type="checkbox" class="task-check" ${task.completed ? 'checked' : ''}>
-                <div class="task-info">
-                    <div class="task-title">${task.title}${task.subject ? ` - ${task.subject}` : ''}</div>
-                    <div class="task-due">${formatDate(task.date)}${task.time ? ` - ${task.time}` : ''}</div>
-                </div>
-                ${task.priority ? `<span class="task-priority ${priorityClass}">${getPriorityText(task.priority)}</span>` : ''}
-            `;
-
-            if (task.completed) {
-                taskItem.style.opacity = "0.5";
-                taskItem.style.textDecoration = "line-through";
-            }
-            
-            return taskItem;
-        }
-
-        function createFullItemElement(item) {
-            const itemRow = document.createElement('div');
-            itemRow.className = 'item-list-row';
-            itemRow.dataset.id = item.id;
-
-            const isTask = item.hasOwnProperty('title');
-            const isExtraHour = item.hasOwnProperty('activity');
-            const priorityClass = isTask ? `priority-${item.priority}` : '';
-            
-            let itemContent = '';
-            if (isTask) {
-                itemContent = `
-                    <div class="item-info">
-                        <div class="item-title">${item.title} - ${item.subject}</div>
-                        <div class="item-due">Entrega: ${formatDate(item.date)} ${item.time ? `- ${item.time}` : ''}</div>
-                    </div>
-                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        ${item.priority ? `<span class="item-priority ${priorityClass}">${getPriorityText(item.priority)}</span>` : ''}
-                        ${item.grade !== null ? `<span class="grade-display">Nota: ${item.grade}</span>` : ''}
-                    </div>
-                `;
-                if ((item.type === 'exam' || item.type === 'assignment') && item.completed) {
-                    itemContent += `<button class="action-btn grade" data-id="${item.id}" title="Adicionar/Editar Nota"><i class="fas fa-marker"></i></button>`;
-                }
-
-            } else if (isExtraHour) {
-                itemContent = `
-                    <div class="item-info">
-                        <div class="item-title">${item.activity} - ${item.type}</div>
-                        <div class="item-due">Data: ${formatDate(item.date)} - ${item.amount}h</div>
-                    </div>
-                `;
-            } else {
-                // For subjects and semesters
-                itemContent = `
-                    <div class="item-info">
-                        <div class="item-title">${item.name}</div>
-                        ${item.start ? `<div class="item-due">${formatDate(item.start)} - ${formatDate(item.end)}</div>` : ''}
-                    </div>
-                `;
-            }
-
-            const actionButtons = `
-                <div class="item-actions">
-                    <button class="action-btn edit" data-id="${item.id}" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete" data-id="${item.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            `;
-            
-            itemRow.innerHTML = itemContent + actionButtons;
-
-            return itemRow;
-        }
-
-        function loadSubjects() {
-            const subjectList = document.getElementById('subjects-full-list');
-            subjectList.innerHTML = '';
-            populateSubjectSelect('task-subject');
-            populateSubjectSelect('class-subject');
-
-            if (subjects.length === 0) {
-                subjectList.innerHTML = `<div class="empty-state"><i class="fas fa-book"></i><div>Nenhuma disciplina cadastrada.</div></div>`;
-            } else {
-                subjects.forEach(subject => {
-                    subjectList.appendChild(createFullItemElement(subject));
-                });
+        function deleteExtraHours(activityId) {
+            if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+                extraHours = extraHours.filter(a => a.id !== activityId);
+                saveToLocalStorage();
+                loadExtraHours();
+                showToast('Atividade excluída com sucesso!');
             }
         }
 
-        function loadSemesters() {
-            const semesterList = document.getElementById('semesters-list');
-            semesterList.innerHTML = '';
-
-            if (semesters.length === 0) {
-                semesterList.innerHTML = `<div class="empty-state"><i class="fas fa-graduation-cap"></i><div>Nenhum semestre cadastrado.</div></div>`;
-            } else {
-                semesters.forEach(semester => {
-                    semesterList.appendChild(createFullItemElement(semester));
-                });
-            }
-        }
-        
-        function loadExtraHours() {
-            const hoursList = document.getElementById('extra-hours-list');
-            const totalHoursDisplay = document.getElementById('total-extra-hours');
-            const remainingHoursDisplay = document.getElementById('remaining-hours');
-            hoursList.innerHTML = '';
-            
-            const totalHours = extraHours.reduce((sum, item) => sum + item.amount, 0);
-            totalHoursDisplay.textContent = totalHours;
-            
-            const remainingHours = Math.max(0, requiredHours - totalHours);
-            remainingHoursDisplay.textContent = remainingHours;
-
-            if (extraHours.length === 0) {
-                hoursList.innerHTML = `<div class="empty-state"><i class="fas fa-award"></i><div>Nenhuma atividade cadastrada.</div></div>`;
-            } else {
-                extraHours.forEach(hour => {
-                    hoursList.appendChild(createFullItemElement(hour));
-                });
-            }
+        // Funções para manipulação de modais
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
         }
 
-        function loadClasses() {
-            document.querySelectorAll('.class-list').forEach(list => {
-                list.innerHTML = '';
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            document.getElementById(formId).querySelector('input[type="hidden"]').value = '';
+        }
+
+        // Funções para LocalStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('lexscholar_subjects', JSON.stringify(subjects));
+            localStorage.setItem('lexscholar_classes', JSON.stringify(classes));
+            localStorage.setItem('lexscholar_tasks', JSON.stringify(tasks));
+            localStorage.setItem('lexscholar_semesters', JSON.stringify(semesters));
+            localStorage.setItem('lexscholar_extraHours', JSON.stringify(extraHours));
+        }
+
+        function loadFromLocalStorage() {
+            const savedSubjects = localStorage.getItem('lexscholar_subjects');
+            const savedClasses = localStorage.getItem('lexscholar_classes');
+            const savedTasks = localStorage.getItem('lexscholar_tasks');
+            const savedSemesters = localStorage.getItem('lexscholar_semesters');
+            const savedExtraHours = localStorage.getItem('lexscholar_extraHours');
+            
+            if (savedSubjects) subjects = JSON.parse(savedSubjects);
+            if (savedClasses) classes = JSON.parse(savedClasses);
+            if (savedTasks) tasks = JSON.parse(savedTasks);
+            if (savedSemesters) semesters = JSON.parse(savedSemesters);
+            if (savedExtraHours) extraHours = JSON.parse(savedExtraHours);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados do localStorage
+            loadFromLocalStorage();
+            
+            // Carregar dados iniciais
+            loadSubjectsToSelects();
+            loadClassesToTimetable();
+            loadTasks();
+            loadSubjects();
+            loadSemesters();
+            loadExtraHours();
+            
+            // Atualizar data atual
+            const dateDisplay = document.querySelector('.date-display');
+            const today = new Date();
+            dateDisplay.textContent = today.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Menu toggle para mobile
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
             });
             
-            if (classes.length === 0) {
-                document.querySelectorAll('.class-list').forEach(list => {
-                    list.innerHTML = `<div class="empty-state"><i class="fas fa-clock"></i><div>Nenhuma aula</div></div>`;
-                });
-                return;
-            }
-            
-            const classesByDay = {
-                monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []
-            };
-            
-            classes.forEach(classItem => {
-                if (classesByDay[classItem.day]) {
-                    classesByDay[classItem.day].push(classItem);
-                }
-            });
-            
-            for (const day in classesByDay) {
-                const classList = document.querySelector(`.class-list[data-day="${day}"]`);
-                
-                if (classesByDay[day].length === 0) {
-                    if (day === 'sunday') {
-                        classList.innerHTML = '<div class="empty-state"><i class="fas fa-coffee"></i><div>Sem aulas</div></div>';
-                    } else {
-                        classList.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><div>Nenhuma aula</div></div>';
-                    }
-                    continue;
-                }
-                
-                classesByDay[day].sort((a, b) => a.start.localeCompare(b.start));
-                
-                classesByDay[day].forEach(classItem => {
-                    const classElement = document.createElement('div');
-                    classElement.className = 'class-item';
+            // Navegação do menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
                     
-                    classElement.innerHTML = `
-                        <div class="class-time">${formatTime(classItem.start)} - ${formatTime(classItem.end)}</div>
-                        <div>${classItem.subject}</div>
-                        ${classItem.location ? `<div>${classItem.location}</div>` : ''}
-                        <div class="item-actions">
-                            <button class="action-btn edit" data-id="${classItem.id}" title="Editar"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete" data-id="${classItem.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    `;
+                    // Ativar item do menu
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
                     
-                    classList.appendChild(classElement);
+                    // Mostrar painel correspondente
+                    document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+                    document.getElementById(target).classList.add('active');
+                    
+                    // Fechar menu em mobile
+                    document.querySelector('.sidebar').classList.remove('active');
                 });
-            }
-        }
-        
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-        }
-        
-        function formatTime(timeString) {
-            const [hours, minutes] = timeString.split(':');
-            return `${hours}:${minutes}`;
-        }
-        
-        function getPriorityText(priority) {
-            switch(priority) {
-                case 'high': return 'Alta';
-                case 'medium': return 'Média';
-                case 'low': return 'Baixa';
-                default: return priority;
-            }
-        }
+            });
+            
+            // Botões para adicionar tarefa
+            document.getElementById('add-task-btn').addEventListener('click', function() {
+                document.getElementById('task-modal-title').textContent = 'Adicionar Nova Tarefa';
+                resetForm('task-form');
+                openModal('task-modal');
+            });
+            
+            document.getElementById('add-task-btn-schedule').addEventListener('click', function() {
+                document.getElementById('task-modal-title').textContent = 'Adicionar Nova Tarefa';
+                resetForm('task-form');
+                openModal('task-modal');
+            });
+            
+            // Botões para adicionar aula
+            document.getElementById('add-class-btn').addEventListener('click', function() {
+                document.getElementById('class-modal-title').textContent = 'Adicionar Nova Aula';
+                resetForm('class-form');
+                openModal('class-modal');
+            });
+            
+            document.getElementById('add-class-btn-schedule').addEventListener('click', function() {
+                document.getElementById('class-modal-title').textContent = 'Adicionar Nova Aula';
+                resetForm('class-form');
+                openModal('class-modal');
+            });
+            
+            document.getElementById('add-class-btn-timetable').addEventListener('click', function() {
+                document.getElementById('class-modal-title').textContent = 'Adicionar Nova Aula';
+                resetForm('class-form');
+                openModal('class-modal');
+            });
+            
+            // Botão para adicionar disciplina
+            document.getElementById('add-subject-btn').addEventListener('click', function() {
+                document.getElementById('subject-modal-title').textContent = 'Adicionar Nova Disciplina';
+                resetForm('subject-form');
+                openModal('subject-modal');
+            });
+            
+            // Botão para adicionar trabalho
+            document.getElementById('add-assignment-btn').addEventListener('click', function() {
+                document.getElementById('task-modal-title').textContent = 'Adicionar Novo Trabalho';
+                resetForm('task-form');
+                document.getElementById('task-type').value = 'assignment';
+                openModal('task-modal');
+            });
+            
+            // Botão para adicionar prova
+            document.getElementById('add-exam-btn').addEventListener('click', function() {
+                document.getElementById('task-modal-title').textContent = 'Adicionar Nova Prova';
+                resetForm('task-form');
+                document.getElementById('task-type').value = 'exam';
+                openModal('task-modal');
+            });
+            
+            // Botão para adicionar semestre
+            document.getElementById('add-semester-btn').addEventListener('click', function() {
+                document.getElementById('semester-modal-title').textContent = 'Adicionar Novo Semestre';
+                resetForm('semester-form');
+                openModal('semester-modal');
+            });
+            
+            // Botão para adicionar horas complementares
+            document.getElementById('add-extra-hours-btn').addEventListener('click', function() {
+                document.getElementById('extra-hours-modal-title').textContent = 'Adicionar Nova Atividade';
+                resetForm('extra-hours-form');
+                openModal('extra-hours-modal');
+            });
+            
+            // Fechar modais
+            document.querySelectorAll('.close-modal, .modal-footer .btn:not(.btn-primary)').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    closeModal(modal.id);
+                });
+            });
+            
+            // Salvar tarefa
+            document.getElementById('save-task').addEventListener('click', function() {
+                const form = document.getElementById('task-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const taskData = {
+                    title: document.getElementById('task-title').value,
+                    type: document.getElementById('task-type').value,
+                    subjectId: document.getElementById('task-subject').value ? parseInt(document.getElementById('task-subject').value) : null,
+                    date: document.getElementById('task-date').value,
+                    time: document.getElementById('task-time').value,
+                    priority: document.getElementById('task-priority').value,
+                    description: document.getElementById('task-description').value
+                };
+                
+                const taskId = document.getElementById('task-id').value;
+                if (taskId) {
+                    updateTask(parseInt(taskId), taskData);
+                } else {
+                    addTask(taskData);
+                }
+                
+                closeModal('task-modal');
+            });
+            
+            // Salvar aula
+            document.getElementById('save-class').addEventListener('click', function() {
+                const form = document.getElementById('class-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const classData = {
+                    subjectId: parseInt(document.getElementById('class-subject').value),
+                    day: document.getElementById('class-day').value,
+                    start: document.getElementById('class-start').value,
+                    end: document.getElementById('class-end').value,
+                    location: document.getElementById('class-location').value,
+                    professor: document.getElementById('class-professor').value
+                };
+                
+                const classId = document.getElementById('class-id').value;
+                if (classId) {
+                    updateClass(parseInt(classId), classData);
+                } else {
+                    addClass(classData);
+                }
+                
+                closeModal('class-modal');
+            });
+            
+            // MODIFICADA para salvar informações adicionais da disciplina
+            document.getElementById('save-subject').addEventListener('click', function() {
+                const form = document.getElementById('subject-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const subjectData = {
+                    name: document.getElementById('subject-name').value,
+                    day: document.getElementById('subject-day').value,
+                    start: document.getElementById('subject-start').value,
+                    end: document.getElementById('subject-end').value,
+                    curriculum: document.getElementById('subject-curriculum').value
+                };
+                
+                const subjectId = document.getElementById('subject-id').value;
+                if (subjectId) {
+                    updateSubject(parseInt(subjectId), subjectData);
+                } else {
+                    addSubject(subjectData);
+                }
+                
+                closeModal('subject-modal');
+            });
+            
+            // Salvar semestre
+            document.getElementById('save-semester').addEventListener('click', function() {
+                const form = document.getElementById('semester-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const semesterData = {
+                    name: document.getElementById('semester-name').value,
+                    start: document.getElementById('semester-start').value,
+                    end: document.getElementById('semester-end').value
+                };
+                
+                const semesterId = document.getElementById('semester-id').value;
+                if (semesterId) {
+                    updateSemester(parseInt(semesterId), semesterData);
+                } else {
+                    addSemester(semesterData);
+                }
+                
+                closeModal('semester-modal');
+            });
+            
+            // Salvar horas complementares
+            document.getElementById('save-extra-hours').addEventListener('click', function() {
+                const form = document.getElementById('extra-hours-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const activityData = {
+                    name: document.getElementById('extra-hours-name').value,
+                    type: document.getElementById('extra-hours-type').value,
+                    date: document.getElementById('extra-hours-date').value,
+                    hours: parseFloat(document.getElementById('extra-hours-hours').value),
+                    description: document.getElementById('extra-hours-description').value
+                };
+                
+                const activityId = document.getElementById('extra-hours-id').value;
+                if (activityId) {
+                    updateExtraHours(parseInt(activityId), activityData);
+                } else {
+                    addExtraHours(activityData);
+                }
+                
+                closeModal('extra-hours-modal');
+            });
+            
+            // Configurações de horas complementares
+            document.getElementById('required-hours-input').addEventListener('change', function() {
+                const requiredHours = parseInt(this.value) || 200;
+                const totalHours = extraHours.reduce((sum, activity) => sum + activity.hours, 0);
+                document.getElementById('remaining-hours').textContent = Math.max(0, requiredHours - totalHours);
+            });
+        });
     </script>
 </body>
 </html>
